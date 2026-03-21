@@ -12,5 +12,5 @@ class Enrollment(models.Model):
     payment_status = models.CharField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    consent_given = models.CharField()
+    consent_given = models.BooleanField(default=False)
     ip_address = models.CharField()
