@@ -14,3 +14,6 @@ class Enrollment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     consent_given = models.BooleanField(default=False)
     ip_address = models.CharField()
+
+    def __str__(self):
+        return f"{self.id} | Nome: {self.name} | CPF: {self.cpf} | Status Pagamento: {self.payment_status} | Local Comprovante: {self.local_proof}"
