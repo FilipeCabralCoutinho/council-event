@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpRequest
 from .forms import EnrollmentForm
 
 def home(request):
-    return HttpResponse("Adicione aqui a página principal!")
+    return HttpResponse("Página principal!")
 
 def new_enrollment(request:HttpRequest):
     if request.method == "POST":
@@ -18,4 +18,4 @@ def new_enrollment(request:HttpRequest):
     return render(request, 'enrollments/new_enrollment.html', context)
 
 def enrollment_received(request):
-    return HttpResponse("Adicione aqui a página Inscrição Recebida!")
+    return HttpResponse("Página Inscrição Recebida!")
