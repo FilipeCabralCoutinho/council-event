@@ -1,12 +1,38 @@
+/* O body centraliza o container */
 body {
-    font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     margin: 0;
-    background-color: #ffffff;
 }
+
+/* O container garante que tudo tenha a mesma largura */
+.main-container {
+    width: 100%;
+    max-width: 400px; /* Mesma largura do seu form */
+}
+
+/* Estilização básica para as mensagens não ficarem feias */
+.messages {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.messages li {
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* .messages li.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+} */
 
 form {
     display: flex;
