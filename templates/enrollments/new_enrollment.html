@@ -7,9 +7,47 @@
     <link rel="stylesheet" href="{% static 'css/new_enrollment.css' %}">
 </head>
 <body>
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}  <input type="submit" value="Realizar Inscrição">
-    </form>
+    <div class="main-container">
+        <header>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li style="color: brown; font-weight: bold;">
+                    {{ message }}
+                </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        </header>
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}  
+            <input type="submit" value="Realizar Inscrição">
+        </form>
+    </div>
 </body>
+<script>
+    const campoDistrito = document.getElementById('id_distrito');
+    const campoIgreja = document.getElementById('id_igreja');
+
+    campoDistrito.addEventListener('change', function() {
+        const distritoId = this.value;
+        const url = "{% url 'enrollments:ajax_busca_igrejas' %}";
+
+        // Limpa o campo de igreja
+        campoIgreja.innerHTML = '<option value="">---------</option>';
+
+        if (distritoId) {
+            fetch(`${url}?distrito_id=${distritoId}`)
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(igreja => {
+                        let option = new Option(igreja.nome, igreja.id);
+                        campoIgreja.add(option);
+                    });
+                });
+        }
+    });
+</script>
 </html>
