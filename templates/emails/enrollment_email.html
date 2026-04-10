@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <body style="margin:0;padding:0;background-color:#f4f4f4;font-family:Arial,Helvetica,sans-serif;">
+
+        <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;padding:20px;">
+            <tr>
+                <td align="center">
+
+                    <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:8px;overflow:hidden;">
+
+                        <tr>
+                            <td style="background:#7a1c1c;color:white;padding:20px;text-align:center;">
+                                <h2 style="margin:0;">IX Concílio da 6ª Região</h2>
+                                <p style="margin:5px 0 0 0;">{{text_head}}</p>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="padding:25px;">
+
+                                <h3 style="color:#333;">{{text_title}}</h3>
+
+                                <p style="color:#555;line-height:1.6;">
+                                    {{start_text|linebreaks}}
+                                </p>
+
+                                <h3 style="margin-top:25px;">Dados da inscrição</h3>
+
+                                <table width="100%" cellpadding="6" cellspacing="0" style="font-size:14px;border-collapse:collapse;">
+                                    <tr><td><strong>NR INSCR:</strong></td><td>{{enrollment.id}}</td></tr>
+                                    <tr><td><strong>NOME:</strong></td><td>{{enrollment.nome}}</td></tr>
+                                    <tr><td><strong>DISTRITO:</strong></td><td>{{enrollment.distrito}}</td></tr>
+                                    <tr><td><strong>IGREJA:</strong></td><td>{{enrollment.igreja}}</td></tr>
+                                    <tr><td><strong>CELULAR:</strong></td><td>{{enrollment.whatsapp}}</td></tr>
+                                    <tr><td><strong>FUNÇÃO:</strong></td><td>{{enrollment.funcao}}</td></tr>
+                                    <tr><td><strong>APTO CONCÍLIO GERAL?:</strong></td><td>{{enrollment.apto_concilio}}</td></tr>
+                                    <tr><td><strong>POSSUI COMORBIDADE?:</strong></td><td>{{enrollment.possui_comorbidade}}</td></tr>
+                                    <tr><td><strong>QUAL COMORBIDADE?:</strong></td><td>{{enrollment.qual_comorbidade}}</td></tr>
+                                    <tr><td><strong>PERNOITE?:</strong></td><td>{{enrollment.pernoite}}</td></tr>
+                                    <tr><td><strong>STATUS PAGAMENTO:</strong></td><td>{{enrollment.status_pagamento}}</td></tr>
+                                </table>
+
+                                <p style="margin-top:25px;color:#555;">
+                                    📅 <strong>Data do evento:</strong><br>
+                                    26, 27 e 28 de novembro de 2026
+                                </p>
+
+                                <p style="margin-top:25px;color:#555;">
+                                    📍 <strong>Local:</strong><br>
+                                    Acampamento Efraim
+                                </p>
+
+                                <h3 style="margin-top:30px;">Dúvidas sobre o evento</h3>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td style="background:#f0f0f0;text-align:center;padding:15px;font-size:12px;color:#666;">
+                                Igreja Metodista Wesleyana<br>
+                                6ª Região
+                            </td>
+                        </tr>
+
+                    </table>
+
+                </td>
+            </tr>
+        </table>
+
+    </body>
+</html>
