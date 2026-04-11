@@ -20,16 +20,168 @@
         {% endif %}
         </header>
 
-        <form action="" method="POST">
+        <form action="" method="POST" id="form-inscricao">
             {% csrf_token %}
-            {{ form.as_p }}  
-            <input type="submit" value="Realizar Inscrição">
+            {{ form.as_p }}
+            <input type="submit" value="Realizar Inscrição" onclick="return validarFormulario()">
         </form>
     </div>
 </body>
 <script>
     const campoDistrito = document.getElementById('id_distrito');
     const campoIgreja = document.getElementById('id_igreja');
+    const campoParcelas = document.getElementById('id_quantidade_parcelas');
+    const divPernoite = document.getElementById('id_pernoite');
+    const campoComorbidade = document.getElementById('id_possui_comorbidade');
+    const campoQualComorbidade = document.getElementById('id_qual_comorbidade');
+    const formulario = document.getElementById('form-inscricao');
+    const distritosSemPernoite = {{ distritos_sem_pernoite|safe }};
+
+    const VALOR_COM_PERNOITE = 720;
+    const VALOR_SEM_PERNOITE = 630;
+
+    // Função para encontrar o label do pernoite
+    function encontrarLabelPernoite() {
+        // Procurar por um label que contenha "acampamento" ou procurar pelo fieldset
+        const allDivs = document.querySelectorAll('p');
+        for (let div of allDivs) {
+            if (div.textContent.includes('acampamento Efraim') || div.textContent.includes('Você dormirá')) {
+                return div;
+            }
+        }
+        return null;
+    }
+
+    // Função para atualizar obrigatoriedade do campo qual_comorbidade
+    function atualizarObrigatoriedadeComorbidade() {
+        const opcoesComorbidade = document.querySelectorAll('input[name="possui_comorbidade"]');
+        let temComorbidade = false;
+
+        opcoesComorbidade.forEach(input => {
+            if (input.checked && input.value === 'SIM') {
+                temComorbidade = true;
+            }
+        });
+
+        if (temComorbidade) {
+            campoQualComorbidade.required = true;
+            campoQualComorbidade.closest('p').style.opacity = '1';
+        } else {
+            campoQualComorbidade.required = false;
+            campoQualComorbidade.value = '';
+            campoQualComorbidade.closest('p').style.opacity = '0.6';
+        }
+    }
+
+    // Função para validar o formulário antes de enviar
+    function validarFormulario() {
+        const opcoesComorbidade = document.querySelectorAll('input[name="possui_comorbidade"]');
+        let temComorbidade = false;
+
+        opcoesComorbidade.forEach(input => {
+            if (input.checked && input.value === 'SIM') {
+                temComorbidade = true;
+            }
+        });
+
+        const qualComorbidadeValor = campoQualComorbidade.value.trim();
+
+        // Verificar se qual_comorbidade está vazio quando possui_comorbidade é SIM
+        if (temComorbidade && !qualComorbidadeValor) {
+            alert('Por favor, especifique qual comorbidade você possui.');
+            campoQualComorbidade.focus();
+            return false;
+        }
+
+        return true;
+    }
+
+    // Função para atualizar as opções de parcelas
+    function atualizarOpcoesParcelas() {
+        const opcoesPernoite = document.querySelectorAll('input[name="pernoite"]');
+        let temPernoite = false;
+
+        opcoesPernoite.forEach(input => {
+            if (input.checked && input.value === 'SIM') {
+                temPernoite = true;
+            }
+        });
+
+        const valorTotal = temPernoite ? VALOR_COM_PERNOITE : VALOR_SEM_PERNOITE;
+        const valorAtual = campoParcelas.value || 1;
+
+        // Limpar e reconstruir opções
+        campoParcelas.innerHTML = '';
+
+        for (let i = 1; i <= 8; i++) {
+            const valorParcela = (valorTotal / i).toFixed(2);
+            const texto = i === 1
+                ? `1x de R$${valorTotal.toFixed(2).replace('.', ',')}`
+                : `${i}x de R$${valorParcela.replace('.', ',')}`;
+
+            const option = document.createElement('option');
+            option.value = i;
+            option.text = texto;
+            campoParcelas.appendChild(option);
+        }
+
+        // Manter a seleção anterior se possível
+        campoParcelas.value = valorAtual;
+    }
+
+    // Função para mostrar/esconder o campo de pernoite
+    function togglePernoite() {
+        const labelPernoite = encontrarLabelPernoite();
+        const distritoSelecionado = campoDistrito.options[campoDistrito.selectedIndex]?.text || '';
+
+        if (!campoDistrito.value) {
+            // Nenhum distrito selecionado: esconder pernoite
+            if (divPernoite) divPernoite.style.display = 'none';
+            if (labelPernoite) labelPernoite.style.display = 'none';
+        } else if (distritosSemPernoite.includes(distritoSelecionado)) {
+            // Distrito sem pernoite: esconder pernoite e setar como "NÃO"
+            if (divPernoite) divPernoite.style.display = 'none';
+            if (labelPernoite) labelPernoite.style.display = 'none';
+            const opcoesPernoite = document.querySelectorAll('input[name="pernoite"]');
+            opcoesPernoite.forEach(input => {
+                if (input.value === 'NAO') {
+                    input.checked = true;
+                }
+            });
+        } else {
+            // Distrito com pernoite: mostrar pernoite
+            if (divPernoite) divPernoite.style.display = 'block';
+            if (labelPernoite) labelPernoite.style.display = 'block';
+        }
+
+        // Atualizar opções de parcelas
+        atualizarOpcoesParcelas();
+    }
+
+    // Verificar ao carregar a página
+    window.addEventListener('DOMContentLoaded', () => {
+        console.log('DOM Carregado - Formulário encontrado:', formulario ? 'SIM' : 'NÃO');
+
+        // Esconder pernoite por padrão
+        if (divPernoite) divPernoite.style.display = 'none';
+        const labelPernoite = encontrarLabelPernoite();
+        if (labelPernoite) labelPernoite.style.display = 'none';
+
+        atualizarOpcoesParcelas();
+        atualizarObrigatoriedadeComorbidade();
+
+        // Adicionar event listeners para pernoite APÓS o DOM estar carregado
+        const opcoesPernoite = document.querySelectorAll('input[name="pernoite"]');
+        opcoesPernoite.forEach(input => {
+            input.addEventListener('change', atualizarOpcoesParcelas);
+        });
+
+        // Adicionar event listeners para comorbidade
+        const opcoesComorbidade = document.querySelectorAll('input[name="possui_comorbidade"]');
+        opcoesComorbidade.forEach(input => {
+            input.addEventListener('change', atualizarObrigatoriedadeComorbidade);
+        });
+    });
 
     campoDistrito.addEventListener('change', function() {
         const distritoId = this.value;
@@ -48,6 +200,9 @@
                     });
                 });
         }
+
+        // Mostrar/esconder pernoite
+        togglePernoite();
     });
 </script>
 </html>

@@ -1,86 +1,381 @@
-/* O body centraliza o container */
+/* Variáveis de Cores */
+:root {
+    --primary-dark: #1a1a1a;
+    --primary-light: #ffffff;
+    --gray-dark: #2d2d2d;
+    --gray-medium: #555555;
+    --gray-light: #f5f5f5;
+    --gray-border: #e0e0e0;
+    --accent-blue: #0066cc;
+    --accent-blue-hover: #0052a3;
+    --success: #27ae60;
+    --error: #e74c3c;
+}
+
+/* Reset e Estilos Globais */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    margin: 0;
+    padding: 20px;
+    color: var(--primary-dark);
 }
 
-/* O container garante que tudo tenha a mesma largura */
+/* Container Principal */
 .main-container {
     width: 100%;
-    max-width: 400px; /* Mesma largura do seu form */
+    max-width: 500px;
+    animation: slideUp 0.5s ease-out;
 }
 
-/* Estilização básica para as mensagens não ficarem feias */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Header e Mensagens */
+header {
+    margin-bottom: 30px;
+}
+
 .messages {
     list-style: none;
-    padding: 0;
     margin-bottom: 20px;
 }
 
 .messages li {
-    padding: 15px;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    font-weight: bold;
-    text-align: center;
-}
-
-/* .messages li.success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-} */
-
-form {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 400px;
-    padding: 20px;
-    border: 1px solid #ccc;
+    padding: 16px 20px;
     border-radius: 8px;
+    margin-bottom: 12px;
+    font-weight: 600;
+    text-align: center;
+    background-color: #fff3cd;
+    color: #856404;
+    border-left: 4px solid #ffc107;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    animation: slideDown 0.4s ease-out;
 }
 
-/* Estiliza cada par de label/input que o Django gera */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Formulário */
+form {
+    background: var(--primary-light);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Campos do Formulário */
 p {
     display: flex;
     flex-direction: column;
-    margin-bottom: 15px;
+    margin-bottom: 24px;
 }
 
 label {
-    margin-bottom: 5px;
-    font-weight: bold;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--primary-dark);
+    font-size: 14px;
+    letter-spacing: 0.3px;
 }
 
+/* Inputs de Texto */
 input[type="text"],
 input[type="email"],
 input[type="number"],
-input[type="tel"] {
-    padding: 8px;
-    border: 1px solid #888;
-    border-radius: 4px;
+input[type="tel"],
+select,
+textarea {
+    padding: 12px 16px;
+    border: 2px solid var(--gray-border);
+    border-radius: 8px;
     font-size: 16px;
+    font-family: inherit;
+    color: var(--primary-dark);
+    background-color: var(--gray-light);
+    transition: all 0.3s ease;
 }
 
-input[type="checkbox"] {
-    width: fit-content;
-    margin-top: 5px;
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="tel"]:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    background-color: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
 }
 
-input[type="submit"] {
-    margin-top: 10px;
-    padding: 10px;
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Radio Buttons */
+input[type="radio"] {
+    margin-right: 8px;
     cursor: pointer;
-    background-color: #f0f0f0;
-    border: 1px solid #888;
-    border-radius: 4px;
-    font-weight: bold;
+    accent-color: var(--accent-blue);
+}
+
+input[type="radio"] + label,
+input[type="checkbox"] + label {
+    display: inline;
+    margin: 0;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* Grupos de Radio/Checkbox */
+div > label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+div > label input[type="radio"],
+div > label input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+/* Checkbox */
+input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--accent-blue);
+}
+
+/* Fieldset para Radio Buttons */
+fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+fieldset legend {
+    display: none;
+}
+
+/* Botão de Submit */
+input[type="submit"] {
+    margin-top: 30px;
+    padding: 14px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--primary-light);
+    background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-hover) 100%);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(0, 102, 204, 0.3);
 }
 
 input[type="submit"]:hover {
-    background-color: #e0e0e0;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 102, 204, 0.4);
+}
+
+input[type="submit"]:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(0, 102, 204, 0.3);
+}
+
+input[type="submit"]:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Help Text */
+.helptext {
+    display: block;
+    font-size: 13px;
+    color: var(--gray-medium);
+    margin-top: 6px;
+    font-style: italic;
+    line-height: 1.4;
+}
+
+.helptext::before {
+    content: "ℹ ";
+    color: var(--accent-blue);
+    font-weight: bold;
+    margin-right: 4px;
+}
+
+/* Reposicionar helptext do apto_concilio para logo abaixo do label */
+#id_apto_concilio_helptext {
+    order: 2;
+    margin-top: 8px;
+    margin-bottom: 12px;
+}
+
+#id_apto_concilio {
+    order: 3;
+}
+
+.errorlist li {
+    color: var(--error);
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 12px;
+    background-color: #ffe6e6;
+    border-radius: 6px;
+    margin-bottom: 8px;
+}
+
+/* Responsivo - Tablet */
+@media (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+
+    .main-container {
+        max-width: 100%;
+    }
+
+    form {
+        padding: 30px 24px;
+    }
+
+    p {
+        margin-bottom: 20px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    input[type="tel"],
+    select,
+    textarea {
+        font-size: 16px; /* Evita zoom no iOS */
+    }
+
+    input[type="submit"] {
+        width: 100%;
+    }
+}
+
+/* Responsivo - Mobile */
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .main-container {
+        max-width: 100%;
+    }
+
+    form {
+        padding: 24px 16px;
+        border-radius: 8px;
+    }
+
+    label {
+        font-size: 13px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    input[type="tel"],
+    select,
+    textarea {
+        padding: 12px 12px;
+        font-size: 16px;
+        border-radius: 6px;
+    }
+
+    input[type="submit"] {
+        margin-top: 24px;
+        padding: 12px 24px;
+        font-size: 14px;
+        width: 100%;
+    }
+
+    .messages li {
+        font-size: 13px;
+        padding: 12px 16px;
+    }
+
+    p {
+        margin-bottom: 16px;
+    }
+}
+
+/* Acessibilidade */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Dark Mode Support (opcional) */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    }
+
+    form {
+        background: var(--gray-dark);
+        color: var(--gray-light);
+    }
+
+    label {
+        color: var(--gray-light);
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    input[type="tel"],
+    select,
+    textarea {
+        background-color: #3a3a3a;
+        color: var(--gray-light);
+        border-color: #4a4a4a;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="number"]:focus,
+    input[type="tel"]:focus,
+    select:focus,
+    textarea:focus {
+        background-color: #2d2d2d;
+        box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.2);
+    }
 }

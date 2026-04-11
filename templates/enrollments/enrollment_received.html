@@ -1,0 +1,78 @@
+{% load static %}<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscrição Recebida - IX Concílio Regional</title>
+    <link rel="stylesheet" href="{% static 'css/enrollment_received.css' %}">
+</head>
+<body>
+    <div class="main-container">
+        <div class="success-container">
+            <!-- Header com Sucesso -->
+            <div class="success-header">
+                <div class="success-icon">✓</div>
+                <h1>Graça e paz!</h1>
+                <p>Sua inscrição foi recebida com sucesso</p>
+            </div>
+
+            <!-- Mensagem Principal -->
+            <div class="content-section">
+                <p>Recebemos com alegria a sua inscrição no <strong>IX Concílio Regional</strong>. Será um tempo especial de comunhão, crescimento e direcionamento de Deus para todos nós.</p>
+            </div>
+
+            <!-- Próximos Passos -->
+            <div class="content-section">
+                <h2>📋 Próximos Passos</h2>
+                <p>Para concluir o seu processo de participação, pedimos que <strong>envie o comprovante de pagamento para este mesmo e-mail</strong>. Assim que o pagamento for confirmado no total, você receberá o seu <strong>voucher de acesso ao Acampamento Efraim</strong>, que garantirá sua entrada no evento.</p>
+                <p>Ficamos felizes por ter você conosco nesse momento tão importante!</p>
+            </div>
+
+            <!-- Grupo de WhatsApp -->
+            <div class="content-section">
+                <h2>💬 Fique Conectado</h2>
+                <p>Entre no nosso <strong>grupo de Whatsapp</strong> para ficar por dentro de todas as informações:</p>
+                <a href="https://chat.whatsapp.com/GHgtfpTI8GuHZWq3CPdV3c?mode=gi_t" class="link-button" target="_blank">
+                    Acessar Grupo WhatsApp
+                </a>
+            </div>
+
+            <!-- Informações de Pagamento -->
+            <div class="content-section">
+                <h2>💳 Informações de Pagamento</h2>
+                <p>Use o Pix para realizar o pagamento conforme seus dados abaixo:</p>
+
+                <div class="pix-section">
+                    <p>Chave Pix:</p>
+                    <div class="highlight-box">
+                        <p>+5521984560937</p>
+                    </div>
+
+                    <p style="margin-top: 20px; margin-bottom: 12px;">QR Code Pix:</p>
+                    <div class="pix-code">
+                        <img src="{% static 'pix.png' %}" alt="QR Code Pix">
+                    </div>
+
+                    <div class="bank-info">
+                        <p><strong>Banco:</strong> <span>Bradesco</span></p>
+                        <p><strong>Agência:</strong> <span>0952</span></p>
+                        <p><strong>Conta Corrente:</strong> <span>5620-0</span></p>
+                        <p><strong>Beneficiário:</strong> <span>Igreja Metodista Wesleyana</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mensagem Final -->
+            <div class="footer-message">
+                <p>Qualquer dúvida, estamos à disposição.</p>
+                <p>Deus abençoe!</p>
+
+                <div class="signature">
+                    <p>Atenciosamente,</p>
+                    <p>Organização do IX Concílio Regional</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

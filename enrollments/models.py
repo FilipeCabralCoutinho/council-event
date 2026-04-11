@@ -51,6 +51,7 @@ class Parcela(models.Model):
     pagamento = models.ForeignKey(Pagamento, on_delete=models.CASCADE, related_name='parcelas')
     numero = models.IntegerField()
     valor = models.DecimalField(max_digits=10, decimal_places=2)
+    observações = models.TextField(blank=True, max_length=500)
     
     status = models.CharField(
         choices=[('PENDENTE', 'PENDENTE'), ('CONFIRMADO', 'CONFIRMADO')],

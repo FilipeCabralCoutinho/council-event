@@ -30,13 +30,23 @@ def new_enrollment(request:HttpRequest):
                 return redirect('enrollments:new_enrollment')
 
 
+    # Distritos que não têm opção de pernoite
+    distritos_sem_pernoite = [
+        'São João de Meriti',
+        'Queimados',
+        'Nova Iguaçu',
+        'Nilópolis',
+        'Mesquita'
+    ]
+
     context = {
-        "form": InscricaoForm
+        "form": InscricaoForm,
+        "distritos_sem_pernoite": distritos_sem_pernoite
     }
     return render(request, 'enrollments/new_enrollment.html', context)
 
 def enrollment_received(request):
-    return HttpResponse("Página Inscrição Recebida!")
+    return render(request, 'enrollments/enrollment_received.html')
 
 def busca_igrejas_por_distrito(request):
     distrito_id = request.GET.get('distrito_id')
