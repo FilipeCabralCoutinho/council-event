@@ -1,5 +1,6 @@
 from django import forms
 from .models import Inscricoes, Igreja
+from django.utils.safestring import mark_safe
 
 
 class InscricaoForm(forms.ModelForm):
@@ -29,6 +30,10 @@ class InscricaoForm(forms.ModelForm):
 
         # consentimento obrigatório
         self.fields['consent_given'].required = True
+        self.fields['consent_given'].label = mark_safe(
+            'Concordo com o tratamento dos meus dados pessoais para a organização deste evento, '
+            'conforme a <a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm" target="_blank" rel="noopener noreferrer">Lei Geral de Proteção de Dados (LGPD)</a>.'
+        )
         self.fields['consent_given'].error_messages = {
             'required': 'Você precisa aceitar os termos para prosseguir.'
         }
@@ -80,9 +85,3 @@ class InscricaoForm(forms.ModelForm):
             )
 
         return cleaned_data
-
-
-
-
-
-

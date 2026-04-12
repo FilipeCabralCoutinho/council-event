@@ -76,7 +76,8 @@ class Services:
                     'text_title': "Recebemos sua inscrição 🙌",
                     'text_head': "Confirmação de inscrição ✅",
                     'start_text': start_text_new(),
-                    'template': 'emails/enrollment_email.html'
+                    'template': 'emails/enrollment_email.html',
+                    'PIX_KEY': settings.PIX_KEY
                 },
                 'payment_confirmation': {
                     'subject': "Pagamento confirmado – IX Concílio da 6ª Região",
@@ -94,7 +95,8 @@ class Services:
                 'enrollment': enrollment,
                 "text_head": config['text_head'],
                 "text_title": config['text_title'],
-                "start_text": config['start_text']
+                "start_text": config['start_text'],
+                "PIX_KEY": config.get('PIX_KEY'),
             })
 
             email = EmailMultiAlternatives(
@@ -151,4 +153,3 @@ class Services:
                 numero=i,
                 valor=valor_parcela
             )
-

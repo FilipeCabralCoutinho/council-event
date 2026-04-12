@@ -38,6 +38,10 @@ class Inscricoes(models.Model):
     consent_given = models.BooleanField(default=False)
     ip_address = models.CharField(blank=True)
     last_email = models.DateTimeField(blank=True, null=True)
+    
+    class Meta:
+        verbose_name = "Inscrição"
+        verbose_name_plural = "Inscrições"
 
     def __str__(self):
         return f"{self.id} | Nome: {self.nome} | CPF: {self.cpf} | Status Pagamento: {self.status_pagamento}"
@@ -57,3 +61,8 @@ class Parcela(models.Model):
         choices=[('PENDENTE', 'PENDENTE'), ('CONFIRMADO', 'CONFIRMADO')],
         default='PENDENTE'
     )
+
+class Painel(Inscricoes):
+    class Meta:
+        proxy = True
+        verbose_name_plural = "DASHBOARD"
