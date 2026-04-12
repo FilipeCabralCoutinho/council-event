@@ -6,7 +6,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.utils import timezone
-from .messages import text_fallback_new, start_text_new
+from .messages import text_fallback_new, start_text_new, text_fallback_payment_confirmation, start_text_payment_confirmation
 from threading import Thread
 from .logging import logger
 
@@ -61,46 +61,71 @@ class Services:
 
         return response
     
-    def _send_email_new_enrollment(self, enrollment_id):
-        enrollment = Inscricoes.objects.get(id=enrollment_id)
-        now = timezone.localtime(timezone.now())
-        
-        logger.info(f"Sending email for new enrollment id {enrollment.id}. Hour: {now}")
+    def _send_email(self, enrollment_id, email_type='new_enrollment'):
+        try:
+            enrollment = Inscricoes.objects.get(id=enrollment_id)
+            now = timezone.localtime(timezone.now())
 
-        text_fallback = text_fallback_new(enrollment)
-        text_title = "Recebemos sua inscrição 🙌"
-        text_head = "Confirmação de inscrição ✅"
-        start_text = start_text_new()
+            logger.info(f"Sending {email_type} email for enrollment id {enrollment.id}. Hour: {now}")
 
-        html_content = render_to_string('emails/enrollment_email.html', {'enrollment': enrollment, "text_head": text_head, "text_title": text_title, "start_text": start_text})
+            # Configurações por tipo de email
+            email_config = {
+                'new_enrollment': {
+                    'subject': "Confirmação de inscrição – IX Concílio da 6ª Região",
+                    'text_fallback': text_fallback_new(enrollment),
+                    'text_title': "Recebemos sua inscrição 🙌",
+                    'text_head': "Confirmação de inscrição ✅",
+                    'start_text': start_text_new(),
+                    'template': 'emails/enrollment_email.html'
+                },
+                'payment_confirmation': {
+                    'subject': "Pagamento confirmado – IX Concílio da 6ª Região",
+                    'text_fallback': text_fallback_payment_confirmation(enrollment),
+                    'text_title': "Pagamento confirmado! ✅",
+                    'text_head': "Confirmação de Pagamento",
+                    'start_text': start_text_payment_confirmation(),
+                    'template': 'emails/payment_confirmation_email.html'
+                }
+            }
 
-        email = EmailMultiAlternatives(
-            "Confirmação de inscrição – IX Concílio da 6ª Região",
-            text_fallback,
-            f"IX Concílio da 6ª Região <{settings.EMAIL_HOST_USER}>",
-            [enrollment.email]
-        )
+            config = email_config.get(email_type, email_config['new_enrollment'])
 
-        email.attach_alternative(html_content, "text/html")
-        email.send()
-        
-        logger.info(f"Email Sended for enrollment id: {enrollment.id}")
+            html_content = render_to_string(config['template'], {
+                'enrollment': enrollment,
+                "text_head": config['text_head'],
+                "text_title": config['text_title'],
+                "start_text": config['start_text']
+            })
 
-        enrollment.last_email = now
-        enrollment.save()
-    
-    def send_email(self, enrollment):
-        logger.info(f"send_email initialized for id: {enrollment.id}")
+            email = EmailMultiAlternatives(
+                config['subject'],
+                config['text_fallback'],
+                f"IX Concílio da 6ª Região <{settings.EMAIL_HOST_USER}>",
+                [enrollment.email]
+            )
+
+            email.attach_alternative(html_content, "text/html")
+            email.send()
+
+            logger.info(f"Email ({email_type}) sent for enrollment id: {enrollment.id}")
+
+            enrollment.last_email = now
+            enrollment.save()
+        except Exception as e:
+            logger.error(f"Error sending {email_type} email for enrollment id {enrollment_id}: {str(e)}", exc_info=True)
+
+    def send_email(self, enrollment, email_type='new_enrollment'):
+        logger.info(f"send_email initialized for id: {enrollment.id}, type: {email_type}")
 
         try:
             Thread(
-                target=self._send_email_new_enrollment, args=(enrollment.id,)
+                target=self._send_email, args=(enrollment.id, email_type)
             ).start()
 
-            logger.info(f"Threads created with success for id: {enrollment.id}")
+            logger.info(f"Thread created with success for id: {enrollment.id}, type: {email_type}")
 
         except Exception as e:
-            logger.error(f"Error when trying create Thread for id: {enrollment.id}")
+            logger.error(f"Error when trying create Thread for id: {enrollment.id}, type: {email_type}")
             raise e
     
     def payment(self, instance_id):
@@ -126,4 +151,4 @@ class Services:
                 numero=i,
                 valor=valor_parcela
             )
-        
+

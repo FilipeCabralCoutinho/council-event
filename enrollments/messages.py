@@ -76,3 +76,78 @@ def start_text_new():
             Organização do IX Concílio Regional
             """
         )
+
+
+def text_fallback_payment_confirmation(enrollment):
+    return f"""
+        Pagamento confirmado – IX Concílio da 6ª Região
+
+
+        Graça e paz!
+
+        Seu pagamento foi confirmado com sucesso! Agradecemos muito por
+        concluir este importante passo para sua participação no IX Concílio Regional.
+
+        Em breve, você receberá seu voucher de acesso ao Acampamento Efraim,
+        que garantirá sua entrada no evento. Mantenha este e-mail em local seguro
+        para referência futura.
+
+        Ficamos felizes por ter você conosco nesse momento tão importante!
+
+        Qualquer dúvida, estamos à disposição.
+
+        Deus abençoe!
+
+        Atenciosamente,
+        Organização do IX Concílio Regional
+
+        ==============================
+        DADOS DA INSCRIÇÃO
+        ==============================
+
+        NR INSCR: {enrollment.id}
+        NOME: {enrollment.nome}
+        DISTRITO: {enrollment.distrito}
+        IGREJA: {enrollment.igreja}
+        STATUS PAGAMENTO: {enrollment.status_pagamento}
+
+        ==============================
+        INFORMAÇÕES DO EVENTO
+        ==============================
+
+        Data:
+        26, 27 e 28 de novembro de 2026
+
+        Local:
+        Acampamento Efraim
+
+        ==============================
+        DÚVIDAS
+        ==============================
+
+        Em caso de dúvidas, entre em contato com a organização.
+
+        Igreja Metodista Wesleyana
+        6ª Região
+        """
+
+
+def start_text_payment_confirmation():
+    return (
+            """
+            Graça e paz!
+
+            Seu pagamento foi confirmado com sucesso! Agradecemos muito por concluir este importante passo para sua participação no IX Concílio Regional.
+
+            Em breve, você receberá seu voucher de acesso ao Acampamento Efraim, que garantirá sua entrada no evento.
+
+            Ficamos felizes por ter você conosco nesse momento tão importante!
+
+            Qualquer dúvida, estamos à disposição.
+
+            Deus abençoe!
+
+            Atenciosamente,
+            Organização do IX Concílio Regional
+            """
+        )
