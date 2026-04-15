@@ -4,11 +4,13 @@ from .services import Services
 from django.utils.html import format_html
 from django.urls import reverse
 from django.shortcuts import redirect
+from .logging import logger
 
 admin.site.register([Distrito, Igreja])
 
 @admin.action(description="Exportar Inscrições Selecionadas para Excel")
 def action_export_excel(modeladmin, request, queryset):
+    logger.info(f"User {request.user} triggered the export of {queryset.count()} enrollments to Excel via Admin.")
     return Services.export_to_excel(queryset)
 
 @admin.register(Inscricoes)
@@ -53,13 +55,14 @@ class PagamentoAdmin(admin.ModelAdmin):
 @admin.register(Painel)
 class PainelAdmin(admin.ModelAdmin):
     def changelist_view(self, request, extra_context=None):
+        logger.info(f"User {request.user} accessed the Dashboard shortcut in Admin.")
         return redirect('enrollments:dashboard')
 
     def has_add_permission(self, request):
-        return False  # Remove o botão "Adicionar" ao lado do menu
+        return False
 
     def has_view_permission(self, request, obj=None):
-        return True  # Garante que qualquer membro da equipe consiga ver o menu
+        return True
 
     def has_module_permission(self, request):
-        return True  # Garante acesso ao módulo no painel para qualquer membro da equipe
+        return True

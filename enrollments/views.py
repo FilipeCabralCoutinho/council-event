@@ -10,6 +10,7 @@ from .services import Services
 from django.conf import settings
 from django.db.models import Count
 from django.contrib.admin.views.decorators import staff_member_required
+from .logging import logger
 
 service = Services()
 
@@ -28,12 +29,14 @@ def get_client_ip(request):
 
 
 def home(request):
+    logger.info("Main page (home) accessed.")
     return HttpResponse("Página principal!")
 
 def new_enrollment(request:HttpRequest):
     if request.method == "POST":
         form = InscricaoForm(request.POST)
         cpf = request.POST.get("cpf")
+        logger.info(f"New enrollment attempt. CPF: {cpf}, IP: {get_client_ip(request)}")
 
         if form.is_valid():
             enrollment = form.save(commit=False)
@@ -41,14 +44,17 @@ def new_enrollment(request:HttpRequest):
             enrollment.save()
 
             enrollment = Inscricoes.objects.get(cpf=cpf)
+            logger.info(f"Enrollment successfully saved. ID: {enrollment.id}, CPF: {cpf}")
 
             service.payment(enrollment.id)
             service.send_email(enrollment)
 
             return redirect("enrollments:enrollment_received")
         else:
+            logger.warning(f"Form validation failed. CPF: {cpf}. Errors: {form.errors}")
             messages.error(request, "Formulário inválido! Verifique os dados e tente novamente.")
             if Inscricoes.objects.filter(cpf=cpf).exists():
+                logger.warning(f"Enrollment attempt with already registered CPF: {cpf}")
                 messages.error(request, "CPF JÁ CADASTRADO!")
             return redirect('enrollments:new_enrollment')
 
@@ -71,6 +77,7 @@ def new_enrollment(request:HttpRequest):
     return render(request, 'enrollments/new_enrollment.html', context)
 
 def enrollment_received(request):
+    logger.info("Enrollment confirmation page accessed.")
     context = {
         "PIX_KEY": settings.PIX_KEY
     }
@@ -78,6 +85,7 @@ def enrollment_received(request):
 
 def busca_igrejas_por_distrito(request):
     distrito_id = request.GET.get('distrito_id')
+    logger.info(f"AJAX search for churches requested for distrito_id: {distrito_id}")
     
     # Filtra as igrejas baseadas no ID do distrito recebido
     igrejas = Igreja.objects.filter(distrito_id=distrito_id).values('id', 'nome').order_by('nome')
@@ -88,6 +96,7 @@ def export_file(request, file):
 
 @staff_member_required
 def dashboard(request):
+    logger.info(f"Dashboard accessed by user: {request.user}")
     # 1. Totais Gerais
     total_inscricoes = Inscricoes.objects.count()
     
@@ -133,6 +142,7 @@ def dashboard(request):
 
 @staff_member_required
 def export_dashboard_excel(request):
+    logger.info(f"Dashboard statistics export to Excel requested by user: {request.user}")
     # 1. Totais Gerais
     df_geral = pd.DataFrame([{
         'Total Inscrições': Inscricoes.objects.count(),

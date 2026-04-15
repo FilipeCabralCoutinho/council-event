@@ -1,6 +1,7 @@
 from django import forms
 from .models import Inscricoes, Igreja
 from django.utils.safestring import mark_safe
+from .logging import logger
 
 
 class InscricaoForm(forms.ModelForm):
@@ -65,6 +66,7 @@ class InscricaoForm(forms.ModelForm):
         possui_comorbidade = self.cleaned_data.get('possui_comorbidade')
 
         if possui_comorbidade == 'SIM' and not qual_comorbidade:
+            logger.warning("Form validation failed: Comorbidity marked as YES, but not specified.")
             raise forms.ValidationError(
                 'Por favor, especifique qual comorbidade você possui.'
             )
@@ -80,6 +82,7 @@ class InscricaoForm(forms.ModelForm):
         distritos_sem_pernoite = ['São João de Meriti', 'Queimados', 'Nova Iguaçu', 'Nilópolis', 'Mesquita']
 
         if distrito and pernoite == 'SIM' and distrito.nome in distritos_sem_pernoite:
+            logger.warning(f"Form validation failed: Enrollment attempt with overnight stay for restricted district ({distrito.nome}).")
             raise forms.ValidationError(
                 f'Pessoas do distrito {distrito.nome} não podem se inscrever com pernoite.'
             )

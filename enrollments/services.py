@@ -14,7 +14,7 @@ from .logging import logger
 class Services:
     @staticmethod
     def export_to_excel(self):
-        logger.info("export_to_excel method initialized!")
+        logger.info("export_to_excel method initialized.")
 
         enrollments = Inscricoes.objects.order_by("id")
 
@@ -57,7 +57,7 @@ class Services:
         )
         response["Content-Disposition"] = 'attachment; filename="inscricoes_concilio.xlsx"'
 
-        logger.info("Excel obtained with success!")
+        logger.info("Excel spreadsheet generated successfully!")
 
         return response
     
@@ -66,9 +66,9 @@ class Services:
             enrollment = Inscricoes.objects.get(id=enrollment_id)
             now = timezone.localtime(timezone.now())
 
-            logger.info(f"Sending {email_type} email for enrollment id {enrollment.id}. Hour: {now}")
+            logger.info(f"Sending ({email_type}) email for enrollment ID {enrollment.id}. Hour: {now}")
 
-            # Configurações por tipo de email
+            # Configs per email type
             email_config = {
                 'new_enrollment': {
                     'subject': "Confirmação de inscrição – IX Concílio da 6ª Região",
@@ -109,47 +109,47 @@ class Services:
             email.attach_alternative(html_content, "text/html")
             email.send()
 
-            logger.info(f"Email ({email_type}) sent for enrollment id: {enrollment.id}")
+            logger.info(f"Email ({email_type}) successfully sent for enrollment ID: {enrollment.id}")
 
             enrollment.last_email = now
             enrollment.save()
         except Exception as e:
-            logger.error(f"Error sending {email_type} email for enrollment id {enrollment_id}: {str(e)}", exc_info=True)
+            logger.error(f"Error sending ({email_type}) email for enrollment ID {enrollment_id}: {str(e)}", exc_info=True)
 
     def send_email(self, enrollment, email_type='new_enrollment'):
-        logger.info(f"send_email initialized for id: {enrollment.id}, type: {email_type}")
+        logger.info(f"send_email method called for ID: {enrollment.id}, type: {email_type}")
 
         try:
             Thread(
                 target=self._send_email, args=(enrollment.id, email_type)
             ).start()
 
-            logger.info(f"Thread created with success for id: {enrollment.id}, type: {email_type}")
+            logger.info(f"Email sending thread successfully created for ID: {enrollment.id}, type: {email_type}")
 
         except Exception as e:
-            logger.error(f"Error when trying create Thread for id: {enrollment.id}, type: {email_type}")
+            logger.error(f"Error trying to create email thread for ID: {enrollment.id}, type: {email_type}")
             raise e
     
     def payment(self, instance_id):
-        logger.info(f"Initialized paymento method for id: {instance_id}")
+        logger.info(f"Payment generation method initialized for ID: {instance_id}")
         instance = Inscricoes.objects.get(id=instance_id)
 
         if instance.pernoite == "SIM":
-            valor_total = 720
+            total_amount = 720
         else:
-            valor_total = 630
+            total_amount = 630
 
-        qtd = instance.quantidade_parcelas
-        valor_parcela = valor_total / qtd
+        installments_count = instance.quantidade_parcelas
+        installment_amount = total_amount / installments_count
 
-        pagamento = Pagamento.objects.create(
+        payment_obj = Pagamento.objects.create(
             inscricao=instance,
-            valor_total=valor_total
+            valor_total=total_amount
         )
 
-        for i in range(1, qtd + 1):
+        for i in range(1, installments_count + 1):
             Parcela.objects.create(
-                pagamento=pagamento,
+                pagamento=payment_obj,
                 numero=i,
-                valor=valor_parcela
+                valor=installment_amount
             )
