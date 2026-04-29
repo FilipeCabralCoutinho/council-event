@@ -2,6 +2,7 @@ from django import forms
 from .models import Inscricoes, Igreja
 from django.utils.safestring import mark_safe
 from .logging import logger
+from datetime import datetime
 
 
 class InscricaoForm(forms.ModelForm):
@@ -39,13 +40,30 @@ class InscricaoForm(forms.ModelForm):
             'required': 'Você precisa aceitar os termos para prosseguir.'
         }
 
+        # diminuição progressiva da quantidade de parcelas
+        range_parcelas = range(1,8)
+        if datetime.now() > datetime.strptime("18/05/2026", "%d/%m/%Y"):
+            range_parcelas = range(1,7)
+        elif datetime.now() > datetime.strptime("18/06/2026", "%d/%m/%Y"):
+            range_parcelas = range(1,6)
+        elif datetime.now() > datetime.strptime("18/07/2026", "%d/%m/%Y"):
+            range_parcelas = range(1,5)
+        elif datetime.now() > datetime.strptime("18/08/2026", "%d/%m/%Y"):
+            range_parcelas = range(1,4)
+        elif datetime.now() > datetime.strptime("18/09/2026", "%d/%m/%Y"):
+            range_parcelas = range(1,3)
+        elif datetime.now() > datetime.strptime("18/10/2026", "%d/%m/%Y"):
+            range_parcelas = range(1,2)
+        elif datetime.now() > datetime.strptime("18/11/2026", "%d/%m/%Y"):
+            range_parcelas = range(1,1)
+
         # Opções de parcelas
         self.fields['quantidade_parcelas'].widget = forms.Select(
-            choices=[(i, f'{i}x') for i in range(1, 9)]
+            choices=[(i, f'{i}x') for i in range_parcelas]
         )
 
         # Adicionar help_text ao campo apto_concilio
-        self.fields['apto_concilio'].help_text = '(Conhece o Estatuto e Regimento interno da denominação? Tem Disponibilidade para viajar?)'
+        self.fields['apto_concilio'].help_text = '***Estar Apto é conhecer o Estatuto e Regimento interno da denominação e ter disponibilidade para viajar com intuito de participar do Concílio Geral de 2027.'
 
         # Start empty
         self.fields['igreja'].queryset = Igreja.objects.none()

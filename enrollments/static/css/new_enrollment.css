@@ -276,6 +276,16 @@ input[type="submit"]:disabled {
     order: 2;
     margin-top: 8px;
     margin-bottom: 12px;
+    background-color: #8d949b;
+    padding: 10px 12px;
+    border-radius: 6px;
+    color: #303131;
+    font-style: normal;
+    font-weight: 500;
+}
+
+#id_apto_concilio_helptext::before {
+    content: none;
 }
 
 #id_apto_concilio {

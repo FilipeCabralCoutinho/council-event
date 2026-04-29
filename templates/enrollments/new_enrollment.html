@@ -113,7 +113,34 @@
         // Limpar e reconstruir opções
         campoParcelas.innerHTML = '';
 
-        for (let i = 1; i <= 8; i++) {
+        const hoje = new Date();
+        const limiteMaio = new Date("2026-05-19");
+        const limiteJunho = new Date("2026-06-19");
+        const limiteJulho = new Date("2026-07-19");
+        const limiteAgosto = new Date("2026-08-19");
+        const limiteSetembro = new Date("2026-09-19");
+        const limiteOutubro = new Date("2026-10-19");
+        const limiteNovembro = new Date("2026-11-19");
+
+        let qtdParcelas = 8
+
+        if (hoje > limiteMaio) {
+            qtdParcelas = 7;
+        } else if (hoje > limiteJunho) {
+            qtdParcelas = 6;
+        } else if (hoje > limiteJulho) {
+            qtdParcelas = 5;
+        } else if (hoje > limiteAgosto) {
+            qtdParcelas = 4;
+        } else if (hoje > limiteSetembro) {
+            qtdParcelas = 3;
+        } else if (hoje > limiteOutubro) {
+            qtdParcelas = 2;
+        } else if (hoje > limiteNovembro) {
+            qtdParcelas = 1;
+        }
+
+        for (let i = 1; i <= qtdParcelas; i++) {
             const valorParcela = (valorTotal / i).toFixed(2);
             const texto = i === 1
                 ? `1x de R$${valorTotal.toFixed(2).replace('.', ',')}`
