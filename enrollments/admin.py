@@ -16,6 +16,8 @@ def action_export_excel(modeladmin, request, queryset):
 @admin.register(Inscricoes)
 class IncricoesAdmin(admin.ModelAdmin):
     list_display = ('id', 'nome', 'cpf', 'status_pagamento', 'ver_pagamento')
+    search_fields = ('id', 'nome', 'cpf')
+    list_filter = ('status_pagamento',)
     exclude = ('consent_given', 'ip_address', 'last_email')
     readonly_fields = ('id',)
     actions = [action_export_excel]
