@@ -1,8 +1,8 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from .models import Inscricoes, Distrito, Igreja, Pagamento, Parcela, Painel
 from .services import Services
 from django.utils.html import format_html
-from django.urls import reverse
+from django.urls import reverse, path
 from django.shortcuts import redirect
 from .logging import logger
 
@@ -15,12 +15,43 @@ def action_export_excel(modeladmin, request, queryset):
 
 @admin.register(Inscricoes)
 class IncricoesAdmin(admin.ModelAdmin):
-    list_display = ('id', 'nome', 'cpf', 'status_pagamento', 'ver_pagamento')
+    list_display = ('id', 'nome', 'cpf', 'status_pagamento', 'ver_pagamento', 'botao_enviar_email')
     search_fields = ('id', 'nome', 'cpf')
     list_filter = ('status_pagamento',)
     exclude = ('consent_given', 'ip_address', 'last_email')
     readonly_fields = ('id',)
     actions = [action_export_excel]
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path(
+                '<int:inscricao_id>/enviar-email/',
+                self.admin_site.admin_view(self.enviar_email_view),
+                name='enrollments_inscricoes_enviar_email',
+            ),
+        ]
+        return custom_urls + urls
+
+    def botao_enviar_email(self, obj):
+        try:
+            url = reverse('admin:enrollments_inscricoes_enviar_email', args=[obj.id])
+            return format_html('<a class="button" style="background-color: #417690; color: white; padding: 5px 10px; border-radius: 4px; font-weight: bold; text-decoration: none;" href="{}">Enviar E-mail Atualização Pagamento</a>', url)
+        except Exception as e:
+            return format_html('<span style="color: red;">Erro: {}</span>', str(e))
+    botao_enviar_email.short_description = "Ação"
+
+    def enviar_email_view(self, request, inscricao_id):
+        try:
+            inscricao = Inscricoes.objects.get(id=inscricao_id)
+            service = Services()
+            service.send_email(inscricao, email_type='update_payment_email')
+            self.message_user(request, f"E-mail de atualização enviado com sucesso para {inscricao.nome}!", messages.SUCCESS)
+        except Inscricoes.DoesNotExist:
+            self.message_user(request, "Erro: Inscrição não encontrada.", level=messages.ERROR)
+            
+        return redirect('admin:enrollments_inscricoes_changelist')
+
 
     def get_actions(self, request):
         actions = super().get_actions(request)

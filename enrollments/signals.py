@@ -40,6 +40,3 @@ def trigger_payment_email(sender, instance, created, **kwargs):
 
     if hasattr(instance, '_send_payment_email') and instance._send_payment_email:
         service.send_email(instance, email_type='payment_confirmation')
-
-
-

@@ -1,3 +1,5 @@
+from .models import Parcela
+
 def text_fallback_new(enrollment):
     return f"""
         Confirmação de inscrição – IX Concílio da 6ª Região
@@ -151,3 +153,54 @@ def start_text_payment_confirmation():
             Organização do IX Concílio Regional
             """
         )
+
+def text_fallback_update_payment(enrollment):
+    enrollment_id = enrollment.id
+    pagamento = enrollment.pagamento
+    parcelas = Parcela.objects.filter(pagamento=pagamento)
+    text_parcelas = ""
+
+    for parcela in parcelas:
+        text_parcelas += f"Parcela {parcela.numero}: R$ {parcela.valor:.2f} - Status: {parcela.status}\n"
+
+
+    return f"""
+        Atualização de pagamento – IX Concílio da 6ª Região
+
+        Graça e paz!
+
+        Houve uma atualização no seu pagamento. As informações atuais são:
+
+        NR INSCR: {enrollment.id}
+        NOME: {enrollment.nome}
+        Parcelas: {enrollment.quantidade_parcelas}
+        {text_parcelas}
+
+        ==============================
+        INFORMAÇÕES DO EVENTO
+        ==============================
+
+        Data:
+        26, 27 e 28 de novembro de 2026
+
+        Local:
+        Acampamento Efraim
+
+        ==============================
+        DÚVIDAS
+        ==============================
+
+        Em caso de dúvidas, entre em contato com a organização do evento pelo grupo do whatsapp.
+
+        Igreja Metodista Wesleyana
+        6ª Região
+        """
+
+def start_text_update_payment():
+    return """
+            Atualização de pagamento – IX Concílio da 6ª Região
+
+            Graça e paz!
+            
+            Houve uma atualização no seu pagamento. As informações atuais são:
+        """

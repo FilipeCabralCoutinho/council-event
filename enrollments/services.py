@@ -6,7 +6,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.utils import timezone
-from .messages import text_fallback_new, start_text_new, text_fallback_payment_confirmation, start_text_payment_confirmation
+from .messages import text_fallback_new, start_text_new, text_fallback_payment_confirmation, start_text_payment_confirmation, text_fallback_update_payment, start_text_update_payment
 from threading import Thread
 from .logging import logger
 
@@ -86,18 +86,41 @@ class Services:
                     'text_head': "Confirmação de Pagamento",
                     'start_text': start_text_payment_confirmation(),
                     'template': 'emails/payment_confirmation_email.html'
+                },
+                'update_payment_email': {
+                    'subject': "Atualização de pagamento – IX Concílio da 6ª Região",
+                    'text_fallback': text_fallback_update_payment(enrollment),
+                    'text_title': "Atualização de Pagamento ✅",
+                    'text_head': "Atualização de Pagamento",
+                    'start_text': start_text_update_payment(),
+                    'template': 'emails/update_payment_email.html'
                 }
             }
 
             config = email_config.get(email_type, email_config['new_enrollment'])
+            
+            if email_type == 'update_payment_email':
+                pagamento = enrollment.pagamento
+                parcelas = Parcela.objects.filter(pagamento=pagamento)
 
-            html_content = render_to_string(config['template'], {
+                html_content = render_to_string(config['template'], {
                 'enrollment': enrollment,
+                'parcelas': parcelas,
                 "text_head": config['text_head'],
                 "text_title": config['text_title'],
                 "start_text": config['start_text'],
                 "PIX_KEY": config.get('PIX_KEY'),
-            })
+                })
+            
+            else:
+                html_content = render_to_string(config['template'], {
+                    'enrollment': enrollment,
+                    "text_head": config['text_head'],
+                    "text_title": config['text_title'],
+                    "start_text": config['start_text'],
+                    "PIX_KEY": config.get('PIX_KEY'),
+                })
+
 
             email = EmailMultiAlternatives(
                 config['subject'],
