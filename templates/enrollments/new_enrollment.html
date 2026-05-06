@@ -122,21 +122,19 @@
         const limiteOutubro = new Date("2026-10-19");
         const limiteNovembro = new Date("2026-11-19");
 
-        let qtdParcelas = 8
+        let qtdParcelas = 7
 
         if (hoje > limiteMaio) {
-            qtdParcelas = 7;
-        } else if (hoje > limiteJunho) {
             qtdParcelas = 6;
-        } else if (hoje > limiteJulho) {
+        } else if (hoje > limiteJunho) {
             qtdParcelas = 5;
-        } else if (hoje > limiteAgosto) {
+        } else if (hoje > limiteJulho) {
             qtdParcelas = 4;
-        } else if (hoje > limiteSetembro) {
+        } else if (hoje > limiteAgosto) {
             qtdParcelas = 3;
-        } else if (hoje > limiteOutubro) {
+        } else if (hoje > limiteSetembro) {
             qtdParcelas = 2;
-        } else if (hoje > limiteNovembro) {
+        } else if (hoje > limiteOutubro) {
             qtdParcelas = 1;
         }
 

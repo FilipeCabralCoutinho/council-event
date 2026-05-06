@@ -41,20 +41,18 @@ class InscricaoForm(forms.ModelForm):
         }
 
         # diminuição progressiva da quantidade de parcelas
-        range_parcelas = range(1,8)
+        range_parcelas = range(1,7)
         if datetime.now() > datetime.strptime("18/05/2026", "%d/%m/%Y"):
-            range_parcelas = range(1,7)
-        elif datetime.now() > datetime.strptime("18/06/2026", "%d/%m/%Y"):
             range_parcelas = range(1,6)
-        elif datetime.now() > datetime.strptime("18/07/2026", "%d/%m/%Y"):
+        elif datetime.now() > datetime.strptime("18/06/2026", "%d/%m/%Y"):
             range_parcelas = range(1,5)
-        elif datetime.now() > datetime.strptime("18/08/2026", "%d/%m/%Y"):
+        elif datetime.now() > datetime.strptime("18/07/2026", "%d/%m/%Y"):
             range_parcelas = range(1,4)
-        elif datetime.now() > datetime.strptime("18/09/2026", "%d/%m/%Y"):
+        elif datetime.now() > datetime.strptime("18/08/2026", "%d/%m/%Y"):
             range_parcelas = range(1,3)
-        elif datetime.now() > datetime.strptime("18/10/2026", "%d/%m/%Y"):
+        elif datetime.now() > datetime.strptime("18/09/2026", "%d/%m/%Y"):
             range_parcelas = range(1,2)
-        elif datetime.now() > datetime.strptime("18/11/2026", "%d/%m/%Y"):
+        elif datetime.now() > datetime.strptime("18/10/2026", "%d/%m/%Y"):
             range_parcelas = range(1,1)
 
         # Opções de parcelas
