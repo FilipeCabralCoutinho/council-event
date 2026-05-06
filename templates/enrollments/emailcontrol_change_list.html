@@ -1,0 +1,11 @@
+{% extends "admin/change_list.html" %}
+{% load i18n %}
+
+{% block object-tools-items %}
+    {{ block.super }}
+    <li>
+        <a href="{% url 'admin:emailcontrol_reenviar_emails' %}" class="addlink" style="background-color: #417690; color: white;">
+            Reenviar E-mails Falhos
+        </a>
+    </li>
+{% endblock %}

@@ -44,8 +44,9 @@
 
                 <div class="pix-section">
                     <p>Chave Pix:</p>
-                    <div class="highlight-box">
-                        <p>{{ PIX_KEY }}</p>
+                    <div class="highlight-box" style="display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
+                        <p id="pix-key-text" style="margin: 0; word-break: break-all;">{{ PIX_KEY }}</p>
+                        <button onclick="copyPixKey()" id="copy-btn" style="padding: 8px 16px; font-weight: bold; cursor: pointer; border-radius: 6px; border: none; background-color: #0066cc; color: white; transition: all 0.3s;">Copiar</button>
                     </div>
 
                     <p style="margin-top: 20px; margin-bottom: 12px;">QR Code Pix:</p>
@@ -74,5 +75,24 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function copyPixKey() {
+            const pixKey = document.getElementById("pix-key-text").innerText;
+            navigator.clipboard.writeText(pixKey).then(() => {
+                const btn = document.getElementById("copy-btn");
+                const originalText = "Copiar";
+                btn.innerText = "Copiado! ✓";
+                btn.style.backgroundColor = "#27ae60"; // verde sucesso
+                
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.style.backgroundColor = "#0066cc"; // azul original
+                }, 2500);
+            }).catch(err => {
+                console.error("Erro ao copiar a chave Pix: ", err);
+            });
+        }
+    </script>
 </body>
 </html>

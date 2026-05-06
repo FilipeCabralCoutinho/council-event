@@ -1,6 +1,7 @@
 from django.contrib import admin, messages
-from .models import Inscricoes, Distrito, Igreja, Pagamento, Parcela, Painel
+from .models import Inscricoes, Distrito, Igreja, Pagamento, Parcela, Painel, EmailControl
 from .services import Services
+from .management.emails_controls import EmailReSender
 from django.utils.html import format_html
 from django.urls import reverse, path
 from django.shortcuts import redirect
@@ -99,3 +100,26 @@ class PainelAdmin(admin.ModelAdmin):
 
     def has_module_permission(self, request):
         return True
+
+
+@admin.register(EmailControl)
+class EmailControlAdmin(admin.ModelAdmin):
+    list_display = ('enrollment_id', 'email_type', 'created_at', 'status')
+    list_filter = ('status',)
+    search_fields = ('enrollment_id',)
+    change_list_template = "enrollments/emailcontrol_change_list.html"
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path('reenviar-emails/', self.admin_site.admin_view(self.reenviar_emails_view), name='emailcontrol_reenviar_emails'),
+        ]
+        return custom_urls + urls
+
+    def reenviar_emails_view(self, request):
+        from threading import Thread
+        
+        # Executa em uma thread separada para evitar Timeout na tela (já que há um time.sleep na rotina original)
+        Thread(target=EmailReSender().resend_failed_emails).start()
+        self.message_user(request, "Rotina de reenvio de e-mails iniciada em segundo plano!", messages.SUCCESS)
+        return redirect('admin:enrollments_emailcontrol_changelist')

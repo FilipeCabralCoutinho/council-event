@@ -1,5 +1,5 @@
 import pandas as pd
-from .models import Inscricoes, Pagamento, Parcela
+from .models import Inscricoes, Pagamento, Parcela, EmailControl
 import io
 from django.http import HttpResponse
 from django.core.mail import EmailMultiAlternatives
@@ -62,6 +62,9 @@ class Services:
         return response
     
     def _send_email(self, enrollment_id, email_type='new_enrollment'):
+        new_email = EmailControl(enrollment_id=enrollment_id, email_type=email_type)
+        new_email.save()
+
         try:
             enrollment = Inscricoes.objects.get(id=enrollment_id)
             now = timezone.localtime(timezone.now())
@@ -136,6 +139,10 @@ class Services:
 
             enrollment.last_email = now
             enrollment.save()
+
+            new_email.status = True
+            new_email.save()
+
         except Exception as e:
             logger.error(f"Error sending ({email_type}) email for enrollment ID {enrollment_id}: {str(e)}", exc_info=True)
 
@@ -150,6 +157,9 @@ class Services:
             logger.info(f"Email sending thread successfully created for ID: {enrollment.id}, type: {email_type}")
 
         except Exception as e:
+            new_email = EmailControl(enrollment_id=enrollment.id, email_type=email_type)
+            new_email.save()
+
             logger.error(f"Error trying to create email thread for ID: {enrollment.id}, type: {email_type}")
             raise e
     

@@ -66,3 +66,12 @@ class Painel(Inscricoes):
     class Meta:
         proxy = True
         verbose_name_plural = "DASHBOARD"
+
+class EmailControl(models.Model):
+    enrollment_id = models.CharField(max_length=100, blank=False, null=False)
+    email_type = models.CharField(max_length=100, blank=False, null=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.enrollment_id} | {self.email_type} | {self.created_at} | {self.status}"

@@ -79,7 +79,8 @@ def new_enrollment(request:HttpRequest):
 def enrollment_received(request):
     logger.info("Enrollment confirmation page accessed.")
     context = {
-        "PIX_KEY": settings.PIX_KEY
+        "PIX_KEY": settings.PIX_KEY,
+        "EMAIL_HOST_USER": settings.EMAIL_HOST_USER
     }
     return render(request, 'enrollments/enrollment_received.html', context)
 
