@@ -58,7 +58,7 @@ class Parcela(models.Model):
     observações = models.TextField(blank=True, max_length=500)
     
     status = models.CharField(
-        choices=[('PENDENTE', 'PENDENTE'), ('CONFIRMADO', 'CONFIRMADO')],
+        choices=[('PENDENTE', 'PENDENTE'), ('PAGA', 'PAGA')],
         default='PENDENTE'
     )
 
