@@ -68,7 +68,7 @@ class Painel(Inscricoes):
         verbose_name_plural = "DASHBOARD"
 
 class EmailControl(models.Model):
-    enrollment_id = models.CharField(max_length=100, blank=False, null=False)
+    enrollment_id = models.IntegerField(blank=False, null=False)
     email_type = models.CharField(max_length=100, blank=False, null=False)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(default=False)
