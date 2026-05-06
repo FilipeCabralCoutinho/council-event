@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Distrito(models.Model):
-    id = models.IntegerField(primary_key=True, auto_created=True, unique=True)
+    id = models.BigAutoField(primary_key=True)
     nome = models.CharField(max_length=100)
 
     def __str__(self):
@@ -10,7 +10,7 @@ class Distrito(models.Model):
 
 
 class Igreja(models.Model):
-    id = models.IntegerField(primary_key=True, auto_created=True, unique=True)
+    id = models.BigAutoField(primary_key=True)
     nome = models.CharField(max_length=100)
     distrito =  models.ForeignKey(Distrito, on_delete=models.PROTECT)
 
@@ -19,7 +19,7 @@ class Igreja(models.Model):
 
 
 class Inscricoes(models.Model):
-    id = models.IntegerField(primary_key=True, auto_created=True, unique=True)
+    id = models.BigAutoField(primary_key=True)
     nome = models.CharField(max_length=100)
     cpf = models.CharField(max_length=11, verbose_name="CPF", unique=True)
     email = models.EmailField()
