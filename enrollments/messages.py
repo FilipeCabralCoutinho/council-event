@@ -10,7 +10,8 @@ def text_fallback_new(enrollment):
         Recebemos com alegria a sua inscrição no IX Concílio Regional.
         Será um tempo especial de comunhão, crescimento e direcionamento
         de Deus para todos nós. Para concluir o seu processo de participação,
-        pedimos que envie o comprovante de pagamento para este mesmo e-mail.
+        pedimos que envie os comprovantes de pagamento EXCLUSIVAMENTE para este
+        mesmo e-mail. Sem o envio dos comprovantes, a Inscrição será CANCELADA.
         Assim que o pagamento for confirmado no total, você receberá o seu
         voucher de acesso ao Acampamento Efraim, que garantirá sua entrada
         no evento.
@@ -64,8 +65,8 @@ def start_text_new():
     return (
             """
             Graça e paz!
-            Recebemos com alegria a sua inscrição no IX Concílio Regional. Será um tempo especial de comunhão, crescimento e direcionamento de Deus para todos nós.
-            Para concluir o seu processo de participação, pedimos que envie o comprovante de pagamento para este mesmo e-mail.
+            Recebemos com alegria a sua inscrição no IX Concílio Regional. Será um tempo especial de comunhão, crescimento e direcionamento de Deus para todos nós.<br><br>
+            <strong>Para concluir o seu processo de participação, pedimos que envie os comprovantes de pagamento exclusivamente para este mesmo e-mail. Sem o envio dos comprovantes a Inscrição será cancelada.</strong><br><br>
             Assim que o pagamento for confirmado no total, você receberá o seu voucher de acesso ao Acampamento Efraim, que garantirá sua entrada no evento.
 
             Ficamos felizes por ter você conosco nesse momento tão importante!
