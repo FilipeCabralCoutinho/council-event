@@ -1,0 +1,24 @@
+{% load static %}<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Inicial - IX Concílio Regional</title>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+</head>
+<body>
+    <div class="main-container">
+        <div class="home-container">
+            <div class="home-header">
+                <!-- Substitua 'logo.png' pela sua imagem de logo na pasta static -->
+                <img src="{% static 'logo.png' %}" alt="Logo IX Concílio Regional" class="home-logo">
+                <h1>Bem-vindo à inscrição do IX Concílio Regional da 6ª Região.</h1>
+            </div>
+
+            <div class="content-section">
+                <a href="/enrollments/new-enrollment" class="link-button">Fazer Inscrição</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

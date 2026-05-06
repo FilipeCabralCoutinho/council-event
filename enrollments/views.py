@@ -30,7 +30,7 @@ def get_client_ip(request):
 
 def home(request):
     logger.info("Main page (home) accessed.")
-    return HttpResponse("Página principal!")
+    return render(request, 'enrollments/home.html')
 
 def new_enrollment(request:HttpRequest):
     if request.method == "POST":
