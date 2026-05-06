@@ -1,5 +1,5 @@
 from django.contrib import admin, messages
-from .models import Inscricoes, Distrito, Igreja, Pagamento, Parcela, Painel, EmailControl
+from .models import Inscricoes, Distrito, Igreja, Pagamento, Parcela, Painel, EmailControl, LogReport
 from .services import Services
 from .management.emails_controls import EmailReSender
 from django.utils.html import format_html
@@ -123,3 +123,12 @@ class EmailControlAdmin(admin.ModelAdmin):
         Thread(target=EmailReSender().resend_failed_emails).start()
         self.message_user(request, "Rotina de reenvio de e-mails iniciada em segundo plano!", messages.SUCCESS)
         return redirect('admin:enrollments_emailcontrol_changelist')
+
+
+@admin.register(LogReport)
+class LogReportAdmin(admin.ModelAdmin):
+    list_display = ('levelname', 'name', 'asctime', 'message', 'filename', 'lineno')
+    list_filter = ('levelname',)
+    search_fields = ('levelname', 'name', 'message', 'filename')
+    date_hierarchy = 'asctime'
+    ordering = ('-asctime',)

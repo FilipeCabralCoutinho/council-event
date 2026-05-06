@@ -75,3 +75,15 @@ class EmailControl(models.Model):
 
     def __str__(self):
         return f"{self.enrollment_id} | {self.email_type} | {self.created_at} | {self.status}"
+
+
+class LogReport(models.Model):
+    levelname = models.CharField(max_length=100, blank=False, null=False)
+    name = models.CharField(max_length=100, blank=False, null=False)
+    asctime = models.DateTimeField(auto_now_add=True)
+    message = models.TextField()
+    filename = models.CharField(max_length=100, blank=False, null=False)
+    lineno = models.IntegerField(blank=False, null=False)
+
+    def __str__(self):
+        return f"{self.levelname} | {self.name} | {self.asctime} | {self.message} | {self.filename} | {self.lineno}"

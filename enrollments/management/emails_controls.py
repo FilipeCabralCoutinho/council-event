@@ -21,8 +21,10 @@ class EmailReSender:
                 logger.warning(f"Resending email {email_log.id}.")
                 self.service.send_email(enrollment, email_log.email_type)
                 email_log.delete()
+
             except Inscricoes.DoesNotExist:
                 logger.error(f"Inscrição {email_log.enrollment_id} não encontrada. Deletando log de e-mail órfão.")
                 email_log.delete()
+
             except Exception as e:
                 logger.error(f"Error resending email {email_log.id}: {str(e)}", exc_info=True)
