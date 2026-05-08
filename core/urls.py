@@ -18,6 +18,10 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView
 
+admin.site.site_header = 'Painel de Administração do Concílio 6ª Região'
+admin.site.site_title = 'Painel de Administração do Concílio 6ª Região'
+admin.site.index_title = 'Administração do Sistema'
+
 urlpatterns = [
     path('', RedirectView.as_view(url='/enrollments/', permanent=True)),
     path('admin/', admin.site.urls),
