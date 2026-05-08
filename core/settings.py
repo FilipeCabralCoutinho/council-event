@@ -142,3 +142,12 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 # Pix
 PIX_KEY = os.getenv('PIX_KEY')
+
+# Permite que o Django aceite o domínio vindo do Cloudflare
+CSRF_TRUSTED_ORIGINS = [
+    'https://concilio6regiao.com.br',
+    'https://www.concilio6regiao.com.br'
+]
+
+# Informa ao Django que ele está atrás de um Proxy que usa HTTPS
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
