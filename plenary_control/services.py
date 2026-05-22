@@ -1,8 +1,8 @@
-from ..enrollments.models import Inscricoes
-from .models import Participantes
+from enrollments.models import Inscricoes
+from .models import Participante
 
 
-class PlenaryControlService:
+class PlenaryService:
     def create_new_participants(self):
         """
         Creates new participant records for all confirmed enrollments.
@@ -12,13 +12,13 @@ class PlenaryControlService:
         )
 
         for participant in confirmed_participants:
-            id_enrollment = participant.id_inscricao
-            check_participant = Participantes.objects.filter(
+            id_enrollment = participant.ids
+            participant_exists = Participante.objects.filter(
                 id_inscricao=id_enrollment
             ).first()
 
-            if not check_participant:
-                new_participant = Participantes(
+            if not participant_exists:
+                new_participant = Participante(
                     id_inscricao=id_enrollment,
                     nome=participant.nome,
                     email=participant.email,
@@ -29,7 +29,7 @@ class PlenaryControlService:
                     igreja=participant.igreja,
                     funcao=participant.funcao,
                     pernoite=participant.pernoite,
-                    comorbidade=participant.comorbidade,
+                    comorbidade=participant.possui_comorbidade,
                     qual_comorbidade=participant.qual_comorbidade
                 )
                 new_participant.save()
@@ -44,7 +44,10 @@ class PlenaryControlService:
         if not enrollment:
             return None
 
-        new_participant = Participantes(
+        if enrollment.status_pagamento != 'CONFIRMADO':
+            return None
+
+        new_participant = Participante(
             id_inscricao=enrollment.id,
             nome=enrollment.nome,
             email=enrollment.email,
@@ -62,3 +65,9 @@ class PlenaryControlService:
         new_participant.save()
 
         return new_participant
+
+    def get_all_participants(self):
+        """
+        Retrieves all participant records.
+        """
+        return Participante.objects.all()
