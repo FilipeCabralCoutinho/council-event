@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plenário</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard_participantes.css' %}">
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <a href="">
+                    <div class="logo">
+                        <img src="{% static 'logo.png' %}" alt="Logo Plenário" style="max-width: 100%; max-height: 100%; border-radius: 50%; object-fit: cover;">
+                    </div>
+                </a>
+            </div>
+            <div class="logo-text">Plenário</div>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-label">Total</div>
+                    <div class="stat-value" id="total-stats">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">No Plenário</div>
+                    <div class="stat-value plenario" id="plenario-stats">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Fora do Plenário</div>
+                    <div class="stat-value fora" id="fora-stats">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Percentual</div>
+                    <div class="stat-value percentage" id="percentual-stats">0%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Search Section -->
+        <div class="search-section">
+            <div class="search-box">
+                <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <input
+                    type="text"
+                    id="search-input"
+                    class="search-input"
+                    placeholder="Buscar por nome ou ID do participante..."
+                    autocomplete="off"
+                >
+            </div>
+        </div>
+
+        <!-- Table Section -->
+        <div class="table-section">
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID Participante</th>
+                            <th>Nome</th>
+                            <th>Função</th>
+                            <th>Distrito</th>
+                            <th>Igreja</th>
+                            <th>No Plenário</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <tr>
+                            <td colspan="6" class="loading">
+                                <div class="spinner"></div>
+                                Carregando participantes...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="empty-state" class="empty-state" style="display: none;">
+                <div class="empty-state-icon">🔍</div>
+                <div class="empty-state-text">Nenhum participante encontrado</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('search-input');
+        const tableBody = document.getElementById('table-body');
+        const emptyState = document.getElementById('empty-state');
+
+        // Função para buscar participantes
+        async function fetchParticipantes(searchTerm = '') {
+            try {
+                let url = '/plenary_control/api/participantes/';
+                if (searchTerm) {
+                    url = `/plenary_control/api/buscar/?q=${encodeURIComponent(searchTerm)}`;
+                }
+
+                const response = await fetch(url);
+                const data = await response.json();
+
+                renderTable(data.participantes);
+                if (searchTerm === '') {
+                    updateStats(data.stats);
+                }
+            } catch (error) {
+                console.error('Erro ao buscar participantes:', error);
+                tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #e74c3c;">Erro ao carregar participantes</td></tr>';
+            }
+        }
+
+        // Função para renderizar a tabela
+        function renderTable(participantes) {
+            if (participantes.length === 0) {
+                tableBody.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            tableBody.style.display = '';
+            emptyState.style.display = 'none';
+
+            tableBody.innerHTML = participantes.map(p => `
+                <tr>
+                    <td>${p.id_participante}</td>
+                    <td><strong>${p.nome}</strong></td>
+                    <td>${p.funcao}</td>
+                    <td>${p.distrito}</td>
+                    <td>${p.igreja}</td>
+                    <td>
+                        <select class="dropdown-select" data-id="${p.id_participante}" onchange="handleStatusChange(this)">
+                            <option value="false" ${!p.no_plenario ? 'selected' : ''}>Não</option>
+                            <option value="true" ${p.no_plenario ? 'selected' : ''}>Sim</option>
+                        </select>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Função para atualizar estatísticas
+        function updateStats(stats) {
+            document.getElementById('total-stats').textContent = stats.total;
+            document.getElementById('plenario-stats').textContent = stats.no_plenario;
+            document.getElementById('fora-stats').textContent = stats.fora_plenario;
+            document.getElementById('percentual-stats').textContent = stats.percentual.toFixed(1) + '%';
+        }
+
+        // Função para lidar com mudanças de status
+        async function handleStatusChange(select) {
+            const id = select.dataset.id;
+            const novoStatus = select.value === 'true';
+
+            try {
+                const response = await fetch('/plenary_control/api/atualizar-plenario/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({
+                        id_participante: parseInt(id),
+                        no_plenario: novoStatus
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    updateStats(data.stats);
+                    showNotification('Participante atualizado com sucesso!', 'success');
+                } else {
+                    showNotification('Erro ao atualizar participante', 'error');
+                    // Reverter para valor anterior
+                    fetchParticipantes(document.getElementById('search-input').value);
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                showNotification('Erro ao conectar com o servidor', 'error');
+                // Reverter para valor anterior
+                fetchParticipantes(document.getElementById('search-input').value);
+            }
+        }
+
+        // Função para obter CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Função para mostrar notificações
+        function showNotification(message, type = 'info') {
+            // Criar elemento de notificação
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 16px 20px;
+                border-radius: 8px;
+                background: ${type === 'success' ? '#27ae60' : '#e74c3c'};
+                color: white;
+                font-weight: 500;
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            // Remover após 3 segundos
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Adicionar estilos de animação
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Event Listeners
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.trim();
+            fetchParticipantes(searchTerm);
+        });
+
+        // Carregar dados ao abrir a página
+        fetchParticipantes();
+    </script>
+</body>
+</html>
