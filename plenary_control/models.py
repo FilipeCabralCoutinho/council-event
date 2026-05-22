@@ -16,6 +16,13 @@ class Participante(models.Model):
     comorbidade = models.CharField(max_length=3)
     qual_comorbidade = models.CharField(max_length=255, blank=True)
     no_plenario = models.BooleanField(default=False)
+    check_in = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Nr_Participante: {self.id_participante} | Nome: {self.nome} | Distrito: {self.distrito} | Igreja: {self.igreja} | No Plenário: {self.no_plenario}"
+        return (
+            f"Nr_Participante: {self.id_participante} | "
+            f"Nome: {self.nome} | "
+            f"Distrito: {self.distrito} | "
+            f"Igreja: {self.igreja} | "
+            f"No Plenário: {self.no_plenario}"
+        )
