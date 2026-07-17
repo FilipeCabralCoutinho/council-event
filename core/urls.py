@@ -25,6 +25,5 @@ admin.site.index_title = 'Administração do Sistema'
 urlpatterns = [
     path('', RedirectView.as_view(url='/enrollments/', permanent=True)),
     path('admin/', admin.site.urls),
-    path('enrollments/', include('enrollments.urls')),
-    path('plenary_control/', include('plenary_control.urls'))
+    path('enrollments/', include('enrollments.urls'))
 ]
