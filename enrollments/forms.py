@@ -61,7 +61,16 @@ class InscricaoForm(forms.ModelForm):
         )
 
         # Adicionar help_text ao campo apto_concilio
-        self.fields['apto_concilio'].help_text = '***Estar Apto é conhecer o Estatuto e Regimento interno da denominação e ter disponibilidade para viajar com intuito de participar do Concílio Geral de 2027.'
+        text_apto = """
+                    Das Atribuições do Concílio Regional Art. 50, inciso V, alíneas "a" e "b".
+
+                    a) No ato da inscrição para o Concílio Regional, todos(as) os(as) delegados(as) deverão manifestar, de forma expressa, se desejam ou não concorrer à composição da delegação que representará a Região no Concílio Geral.
+
+                    b) Os clérigos e leigos, só poderão concorrer para a delegação ao Concílio-Geral se estiverem em dia com suas as obrigações locais, distritais, regionais e gerais.
+
+                    Manifesta interesse em concorrer e, caso eleito(a), integrar a delegação da VI Região no Concílio Geral de 2027?
+                    """
+        self.fields['apto_concilio'].help_text = mark_safe(text_apto.strip().replace('\n', '<br>'))
 
         # Start empty
         self.fields['igreja'].queryset = Igreja.objects.none()
