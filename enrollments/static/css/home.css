@@ -46,6 +46,10 @@ body {
     padding: 40px 30px;
     text-align: center;
     border-bottom: 1px solid var(--gray-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
 }
 
 .home-logo {
@@ -53,9 +57,17 @@ body {
     height: 140px;
     border-radius: 50%;
     object-fit: cover;
-    margin-bottom: 24px;
     display: inline-block;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.home-banner {
+    width: 100%;
+    object-fit: cover;
+    display: flex;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 h1 {
@@ -110,6 +122,9 @@ h1 {
     .home-logo {
         width: 110px;
         height: 110px;
+    }
+    .home-banner {
+        /* A regra principal já cuida da responsividade */
     }
     h1 {
         font-size: 20px;
