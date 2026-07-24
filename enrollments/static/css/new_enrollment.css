@@ -257,8 +257,8 @@ input[type="submit"]:disabled {
 /* Help Text */
 .helptext {
     display: block;
-    font-size: 13px;
-    color: var(--gray-medium);
+    font-size: 17px;
+    color: #F8F9FA;
     margin-top: 6px;
     font-style: italic;
     line-height: 1.4;

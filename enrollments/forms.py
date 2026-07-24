@@ -62,7 +62,9 @@ class InscricaoForm(forms.ModelForm):
 
         # Adicionar help_text ao campo apto_concilio
         text_apto = """
-                    Das Atribuições do Concílio Regional Art. 50, inciso V, alíneas "a" e "b".
+                    Das Atribuições do Concílio Regional 
+                    
+                    Art. 50, inciso V, alíneas "a" e "b".
 
                     a) No ato da inscrição para o Concílio Regional, todos(as) os(as) delegados(as) deverão manifestar, de forma expressa, se desejam ou não concorrer à composição da delegação que representará a Região no Concílio Geral.
 
