@@ -186,3 +186,30 @@ class Services:
                 numero=i,
                 valor=installment_amount
             )
+
+    def cpf_validate(self, cpf_str):
+        logger.info(f"Validating CPF: {cpf_str}")
+
+        # Remove non-numeric characters
+        cpf = ''.join(filter(str.isdigit, cpf_str))
+
+        if len(cpf) != 11 or cpf == cpf[0] * 11:
+            logger.warning(f"Invalid CPF format: {cpf}")
+            return False
+
+        def calculate_digit(cpf_part):
+            total = sum(int(num) * weight for num, weight in zip(cpf_part, range(len(cpf_part) + 1, 1, -1)))
+            remainder = total % 11
+            return '0' if remainder < 2 else str(11 - remainder)
+
+        first_digit = calculate_digit(cpf[:9])
+        second_digit = calculate_digit(cpf[:10])
+
+        is_valid = first_digit == cpf[9] and second_digit == cpf[10]
+        
+        if is_valid:
+            logger.info(f"CPF is valid: {cpf}")
+        else:
+            logger.warning(f"CPF is invalid: {cpf}")
+
+        return is_valid

@@ -1,4 +1,12 @@
 from django.db import models
+import re
+
+
+def to_title_case(value: str) -> str:
+    if not value:
+        return value
+    parts = re.split(r"\s+", value.strip())
+    return " ".join(p.capitalize() for p in parts if p)
 
 
 class Distrito(models.Model):
@@ -12,7 +20,7 @@ class Distrito(models.Model):
 class Igreja(models.Model):
     id = models.BigAutoField(primary_key=True)
     nome = models.CharField(max_length=100)
-    distrito =  models.ForeignKey(Distrito, on_delete=models.PROTECT)
+    distrito = models.ForeignKey(Distrito, on_delete=models.PROTECT)
 
     def __str__(self):
         return f"{self.nome}"
@@ -21,7 +29,7 @@ class Igreja(models.Model):
 class Inscricoes(models.Model):
     id = models.BigAutoField(primary_key=True)
     nome = models.CharField(max_length=100)
-    cpf = models.CharField(max_length=11, verbose_name="CPF", unique=True)
+    cpf = models.CharField(max_length=11, verbose_name="CPF (Somente Números)", unique=True)
     email = models.EmailField()
     whatsapp = models.CharField(max_length=11, verbose_name="Whatsapp/celular")
     distrito = models.ForeignKey(Distrito, on_delete=models.PROTECT)
@@ -45,6 +53,11 @@ class Inscricoes(models.Model):
 
     def __str__(self):
         return f"{self.id} | Nome: {self.nome} | CPF: {self.cpf} | Status Pagamento: {self.status_pagamento}"
+
+    def save(self, *args, **kwargs):
+        if self.nome:
+            self.nome = to_title_case(self.nome)
+        super().save(*args, **kwargs)
 
 class Pagamento(models.Model):
     inscricao = models.OneToOneField(Inscricoes, on_delete=models.CASCADE, related_name='pagamento')

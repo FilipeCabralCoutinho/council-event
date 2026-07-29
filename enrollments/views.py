@@ -38,6 +38,11 @@ def new_enrollment(request:HttpRequest):
         cpf = request.POST.get("cpf")
         logger.info(f"New enrollment attempt. CPF: {cpf}, IP: {get_client_ip(request)}")
 
+        if not service.cpf_validate(cpf):
+            logger.warning(f"Invalid CPF attempt. CPF: {cpf}")
+            messages.error(request, "CPF inválido!")
+            return redirect('enrollments:new_enrollment')
+
         if form.is_valid():
             enrollment = form.save(commit=False)
             enrollment.ip_address = get_client_ip(request)
