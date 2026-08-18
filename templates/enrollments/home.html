@@ -4,6 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página Inicial - IX Concílio Regional</title>
+    <meta property="og:title" content="Concílio Regional">
+    <meta property="og:description" content="Página de inscrição no Concílio Regional">
+    {% comment %} Monta URL absoluta para image e url usando request quando disponível {% endcomment %}
+    {% if request %}
+        {% if request.is_secure %}
+            {% with scheme="https" %}
+        {% else %}
+            {% with scheme="http" %}
+        {% endif %}
+            <meta property="og:image" content="{{ scheme }}://{{ request.get_host }}{% static 'home2.jpeg' %}">
+            <meta property="og:url" content="{{ scheme }}://{{ request.get_host }}{{ request.path }}">
+        {% endwith %}
+    {% else %}
+        <meta property="og:image" content="{% static 'home2.jpeg' %}">
+        <meta property="og:url" content="/">
+    {% endif %}
+    <meta property="og:type" content="website">
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'logo.png' %}">  
 </head>
