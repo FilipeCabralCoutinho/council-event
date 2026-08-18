@@ -6,6 +6,12 @@ from datetime import datetime
 
 
 class InscricaoForm(forms.ModelForm):
+    sexo = forms.ChoiceField(
+        choices=Inscricoes.SEXO_CHOICES,
+        widget=forms.RadioSelect(),
+        required=True,
+        label="Sexo"
+    )
     # Recriar o campo pernoite sem opção vazia
     pernoite = forms.ChoiceField(
         choices=[("NAO", "NÃO"), ("SIM", "SIM")],
@@ -25,7 +31,7 @@ class InscricaoForm(forms.ModelForm):
 
     class Meta:
         model = Inscricoes
-        fields = ['nome','cpf','email','whatsapp','distrito','igreja','funcao','apto_concilio','possui_comorbidade','qual_comorbidade', 'pernoite', 'quantidade_parcelas', 'consent_given']
+        fields = ['nome', 'sexo', 'cpf', 'email', 'whatsapp', 'distrito', 'igreja', 'funcao', 'apto_concilio', 'possui_comorbidade', 'qual_comorbidade', 'pernoite', 'quantidade_parcelas', 'consent_given']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

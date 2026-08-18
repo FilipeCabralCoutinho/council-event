@@ -34,6 +34,15 @@ class Inscricoes(models.Model):
     whatsapp = models.CharField(max_length=11, verbose_name="Whatsapp/celular")
     distrito = models.ForeignKey(Distrito, on_delete=models.PROTECT)
     igreja = models.ForeignKey(Igreja, on_delete=models.PROTECT)
+    SEXO_MASCULINO = "MASCULINO"
+    SEXO_FEMININO = "FEMININO"
+    SEXO_CHOICES = [
+        (SEXO_MASCULINO, "Masculino"),
+        (SEXO_FEMININO, "Feminino"),
+    ]
+
+    sexo = models.CharField(max_length=10, choices=SEXO_CHOICES, null=False, blank=False, default=SEXO_MASCULINO)
+
     funcao = models.CharField(choices=[("CLERIGO", "Clérigo (Pastor/Missionária)"), ("MEMBRO", "Membro")], verbose_name="Função")
     quantidade_parcelas = models.IntegerField(default=1, verbose_name="Quantidade de parcelas (Vencimento todo dia 20).")
     status_pagamento = models.CharField(choices=[('PENDENTE', 'PENDENTE'), ('CONFIRMADO', 'CONFIRMADO')],default='PENDENTE')
