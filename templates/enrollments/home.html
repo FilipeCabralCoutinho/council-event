@@ -10,12 +10,15 @@
     {% if request %}
         {% if request.is_secure %}
             {% with scheme="https" %}
+                <meta property="og:image" content="{{ scheme }}://{{ request.get_host }}{% static 'home2.jpeg' %}">
+                <meta property="og:url" content="{{ scheme }}://{{ request.get_host }}{{ request.path }}">
+            {% endwith %}
         {% else %}
             {% with scheme="http" %}
+                <meta property="og:image" content="{{ scheme }}://{{ request.get_host }}{% static 'home2.jpeg' %}">
+                <meta property="og:url" content="{{ scheme }}://{{ request.get_host }}{{ request.path }}">
+            {% endwith %}
         {% endif %}
-            <meta property="og:image" content="{{ scheme }}://{{ request.get_host }}{% static 'home2.jpeg' %}">
-            <meta property="og:url" content="{{ scheme }}://{{ request.get_host }}{{ request.path }}">
-        {% endwith %}
     {% else %}
         <meta property="og:image" content="{% static 'home2.jpeg' %}">
         <meta property="og:url" content="/">
