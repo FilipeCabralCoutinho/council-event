@@ -14,11 +14,11 @@ class InscricaoForm(forms.ModelForm):
     )
     # Recriar o campo pernoite sem opção vazia
     pernoite = forms.ChoiceField(
-        choices=[("NAO", "NÃO"), ("SIM", "SIM")],
+        choices=[("NAO", "Sem Pernoite"), ("SIM", "Com Pernoite")],
         widget=forms.RadioSelect(),
         initial="NAO",
         required=True,
-        label="Você dormirá no acampamento Efraim?"
+        label="Você dormirá no Acampamento Efraim?"
     )
 
     # Customizar possui_comorbidade para usar RadioSelect
@@ -47,16 +47,8 @@ class InscricaoForm(forms.ModelForm):
         }
 
         # diminuição progressiva da quantidade de parcelas
-        range_parcelas = range(1,7)
-        if datetime.now() > datetime.strptime("18/05/2026", "%d/%m/%Y"):
-            range_parcelas = range(1,6)
-        elif datetime.now() > datetime.strptime("18/06/2026", "%d/%m/%Y"):
-            range_parcelas = range(1,5)
-        elif datetime.now() > datetime.strptime("18/07/2026", "%d/%m/%Y"):
-            range_parcelas = range(1,4)
-        elif datetime.now() > datetime.strptime("18/08/2026", "%d/%m/%Y"):
-            range_parcelas = range(1,3)
-        elif datetime.now() > datetime.strptime("18/09/2026", "%d/%m/%Y"):
+        range_parcelas = range(1,3)
+        if datetime.now() > datetime.strptime("18/09/2026", "%d/%m/%Y"):
             range_parcelas = range(1,2)
         elif datetime.now() > datetime.strptime("18/10/2026", "%d/%m/%Y"):
             range_parcelas = range(1,1)

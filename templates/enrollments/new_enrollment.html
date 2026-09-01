@@ -8,18 +8,6 @@
 </head>
 <body>
     <div class="main-container">
-        <header>
-        {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li style="color: brown; font-weight: bold;">
-                    {{ message }}
-                </li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        </header>
-
         <form action="" method="POST" id="form-inscricao">
             {% csrf_token %}
             {{ form.as_p }}
@@ -122,17 +110,9 @@
         const limiteOutubro = new Date("2026-10-19");
         const limiteNovembro = new Date("2026-11-19");
 
-        let qtdParcelas = 7
+        let qtdParcelas = 3
 
-        if (hoje > limiteMaio) {
-            qtdParcelas = 6;
-        } else if (hoje > limiteJunho) {
-            qtdParcelas = 5;
-        } else if (hoje > limiteJulho) {
-            qtdParcelas = 4;
-        } else if (hoje > limiteAgosto) {
-            qtdParcelas = 3;
-        } else if (hoje > limiteSetembro) {
+        if (hoje > limiteSetembro) {
             qtdParcelas = 2;
         } else if (hoje > limiteOutubro) {
             qtdParcelas = 1;
@@ -161,15 +141,15 @@
 
         if (!campoDistrito.value) {
             // Nenhum distrito selecionado: esconder pernoite
-            if (divPernoite) divPernoite.style.display = 'none';
-            if (labelPernoite) labelPernoite.style.display = 'none';
+            if (divPernoite) divPernoite.style.display = 'block'; // troquei o 'none' por 'block'
+            if (labelPernoite) labelPernoite.style.display = 'block';
         } else if (distritosSemPernoite.includes(distritoSelecionado)) {
             // Distrito sem pernoite: esconder pernoite e setar como "NÃO"
-            if (divPernoite) divPernoite.style.display = 'none';
-            if (labelPernoite) labelPernoite.style.display = 'none';
+            if (divPernoite) divPernoite.style.display = 'block';
+            if (labelPernoite) labelPernoite.style.display = 'block';
             const opcoesPernoite = document.querySelectorAll('input[name="pernoite"]');
             opcoesPernoite.forEach(input => {
-                if (input.value === 'NAO') {
+                if (input.value === 'Sem Pernoite') {
                     input.checked = true;
                 }
             });
@@ -188,9 +168,9 @@
         console.log('DOM Carregado - Formulário encontrado:', formulario ? 'SIM' : 'NÃO');
 
         // Esconder pernoite por padrão
-        if (divPernoite) divPernoite.style.display = 'none';
-        const labelPernoite = encontrarLabelPernoite();
-        if (labelPernoite) labelPernoite.style.display = 'none';
+        //if (divPernoite) divPernoite.style.display = 'none';
+        //const labelPernoite = encontrarLabelPernoite();
+        //if (labelPernoite) labelPernoite.style.display = 'none';
 
         atualizarOpcoesParcelas();
         atualizarObrigatoriedadeComorbidade();

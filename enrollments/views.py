@@ -33,6 +33,15 @@ def home(request):
     return render(request, 'enrollments/home.html')
 
 def new_enrollment(request:HttpRequest):
+    # Distritos que não têm opção de pernoite
+    distritos_sem_pernoite = [
+        'São João de Meriti',
+        'Queimados',
+        'Nova Iguaçu',
+        'Nilópolis',
+        'Mesquita'
+    ]
+
     if request.method == "POST":
         form = InscricaoForm(request.POST)
         cpf = request.POST.get("cpf")
@@ -55,28 +64,20 @@ def new_enrollment(request:HttpRequest):
             service.send_email(enrollment)
 
             return redirect("enrollments:enrollment_received")
-        else:
-            logger.warning(f"Form validation failed. CPF: {cpf}. Errors: {form.errors}")
-            messages.error(request, "Formulário inválido! Verifique os dados e tente novamente.")
-            if Inscricoes.objects.filter(cpf=cpf).exists():
-                logger.warning(f"Enrollment attempt with already registered CPF: {cpf}")
-                messages.error(request, "CPF JÁ CADASTRADO!")
-            return redirect('enrollments:new_enrollment')
 
+        logger.warning(f"Form validation failed. CPF: {cpf}. Errors: {form.errors}")
+        if Inscricoes.objects.filter(cpf=cpf).exists():
+            logger.warning(f"Enrollment attempt with already registered CPF: {cpf}")
+            messages.error(request, "CPF JÁ CADASTRADO!")
 
-
-
-    # Distritos que não têm opção de pernoite
-    distritos_sem_pernoite = [
-        'São João de Meriti',
-        'Queimados',
-        'Nova Iguaçu',
-        'Nilópolis',
-        'Mesquita'
-    ]
+        context = {
+            "form": form,
+            "distritos_sem_pernoite": distritos_sem_pernoite
+        }
+        return render(request, 'enrollments/new_enrollment.html', context)
 
     context = {
-        "form": InscricaoForm,
+        "form": InscricaoForm(),
         "distritos_sem_pernoite": distritos_sem_pernoite
     }
     return render(request, 'enrollments/new_enrollment.html', context)
