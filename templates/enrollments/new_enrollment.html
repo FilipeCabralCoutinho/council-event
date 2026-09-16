@@ -8,6 +8,14 @@
 </head>
 <body>
     <div class="main-container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-danger" style="color: #b00020; background: #fff1f1; border: 1px solid #f5c2c7; padding: 10px 12px; margin-bottom: 15px; border-radius: 6px;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
         <form action="" method="POST" id="form-inscricao">
             {% csrf_token %}
             {{ form.as_p }}

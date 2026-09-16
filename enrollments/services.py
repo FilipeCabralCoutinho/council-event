@@ -36,6 +36,7 @@ class Services:
                     "Possui Comorbidade?": i.possui_comorbidade,
                     "Qual Comorbidade?": i.qual_comorbidade,
                     "Vai Dormir no Efraim?": i.pernoite,
+                    "Sexo": i.sexo,
                     "Data/Hora Criação": i.created_at.strftime('%d/%m/%Y %H:%M'),
                     "Data/Hora Atualização": i.updated_at.strftime('%d/%m/%Y %H:%M'),
                     "Consentimento Dados": i.consent_given,

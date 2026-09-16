@@ -50,7 +50,12 @@ def new_enrollment(request:HttpRequest):
         if not service.cpf_validate(cpf):
             logger.warning(f"Invalid CPF attempt. CPF: {cpf}")
             messages.error(request, "CPF inválido!")
-            return redirect('enrollments:new_enrollment')
+            form = InscricaoForm(request.POST)
+            context = {
+                "form": form,
+                "distritos_sem_pernoite": distritos_sem_pernoite,
+            }
+            return render(request, 'enrollments/new_enrollment.html', context)
 
         if form.is_valid():
             enrollment = form.save(commit=False)
@@ -124,7 +129,14 @@ def dashboard(request):
     igrejas_stats = Igreja.objects.annotate(
         total_inscricoes=Count('inscricoes')
     ).filter(total_inscricoes__gt=0).values('distrito_id', 'nome', 'total_inscricoes')
-    
+
+    # 6. Total Apto para o Concílio Regional
+    aptos_concilio_geral = Inscricoes.objects.filter(apto_concilio='SIM').count()
+
+    # 7. Total por Sexo
+    total_masculino = Inscricoes.objects.filter(sexo='MASCULINO').count()
+    total_feminino = Inscricoes.objects.filter(sexo='FEMININO').count()
+
     igrejas_por_distrito = {}
     for igreja in igrejas_stats:
         distrito_id = str(igreja['distrito_id'])
@@ -144,6 +156,9 @@ def dashboard(request):
         'distritos_stats': distritos_stats,
         'igrejas_por_distrito_json': json.dumps(igrejas_por_distrito),
         'distritos': Distrito.objects.all().order_by('nome'),
+        'aptos_concilio_geral': aptos_concilio_geral,
+        'total_masculino': total_masculino,
+        'total_feminino': total_feminino
     }
     return render(request, 'enrollments/dashboard.html', context)
 
@@ -156,7 +171,10 @@ def export_dashboard_excel(request):
         'Pagamento Pendente': Inscricoes.objects.filter(status_pagamento='PENDENTE').count(),
         'Pagamento Confirmado': Inscricoes.objects.filter(status_pagamento='CONFIRMADO').count(),
         'Com Pernoite': Inscricoes.objects.filter(pernoite='SIM').count(),
-        'Sem Pernoite': Inscricoes.objects.filter(pernoite='NAO').count()
+        'Sem Pernoite': Inscricoes.objects.filter(pernoite='NAO').count(),
+        'Apto para Concílio': Inscricoes.objects.filter(apto_concilio='SIM').count(),
+        'Masculino': Inscricoes.objects.filter(sexo='MASCULINO').count(),
+        'Feminino': Inscricoes.objects.filter(sexo='FEMININO').count()
     }])
 
     # 2. Total por Distrito

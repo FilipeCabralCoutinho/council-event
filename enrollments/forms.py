@@ -104,7 +104,7 @@ class InscricaoForm(forms.ModelForm):
         pernoite = cleaned_data.get('pernoite')
 
         # Distritos que não podem ter pernoite
-        distritos_sem_pernoite = ['São João de Meriti', 'Queimados', 'Nova Iguaçu', 'Nilópolis', 'Mesquita']
+        distritos_sem_pernoite = [] # pernoite liberado pra todos.
 
         if distrito and pernoite == 'SIM' and distrito.nome in distritos_sem_pernoite:
             logger.warning(f"Form validation failed: Enrollment attempt with overnight stay for restricted district ({distrito.nome}).")
