@@ -103,6 +103,17 @@ class InscricaoForm(forms.ModelForm):
         distrito = cleaned_data.get('distrito')
         pernoite = cleaned_data.get('pernoite')
 
+        # Limite de vagas para o pernoite
+        total_com_pernoite = Inscricoes.objects.filter(pernoite='SIM')
+        if self.instance and self.instance.pk:
+            total_com_pernoite = total_com_pernoite.exclude(pk=self.instance.pk)
+
+        if pernoite == 'SIM' and total_com_pernoite.count() >= 300:
+            logger.warning("Form validation failed: overnight stay capacity reached.")
+            raise forms.ValidationError({
+                'pernoite': 'As vagas de pernoite esgotaram.'
+            })
+
         # Distritos que não podem ter pernoite
         distritos_sem_pernoite = [] # pernoite liberado pra todos.
 

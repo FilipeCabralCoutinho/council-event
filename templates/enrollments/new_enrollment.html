@@ -32,6 +32,7 @@
     const campoQualComorbidade = document.getElementById('id_qual_comorbidade');
     const formulario = document.getElementById('form-inscricao');
     const distritosSemPernoite = {{ distritos_sem_pernoite|safe }};
+    const capacidadePernoiteAtingida = {{ capacidade_pernoite_atingida|yesno:"true,false" }};
 
     const VALOR_COM_PERNOITE = 720;
     const VALOR_SEM_PERNOITE = 630;
@@ -171,22 +172,68 @@
         atualizarOpcoesParcelas();
     }
 
+    function atualizarMensagemPernoite() {
+        const mensagemExistente = document.getElementById('mensagem-pernoite');
+
+        if (capacidadePernoiteAtingida) {
+            if (!mensagemExistente) {
+                const mensagem = document.createElement('div');
+                mensagem.id = 'mensagem-pernoite';
+                mensagem.textContent = 'As vagas de pernoite esgotaram.';
+                mensagem.style.marginTop = '8px';
+                mensagem.style.color = '#b00020';
+                mensagem.style.fontWeight = '600';
+                mensagem.style.fontSize = '14px';
+                if (divPernoite && divPernoite.parentNode) {
+                    divPernoite.parentNode.insertBefore(mensagem, divPernoite.nextSibling);
+                }
+            } else {
+                mensagemExistente.textContent = 'As vagas de pernoite esgotaram.';
+            }
+        } else if (mensagemExistente) {
+            mensagemExistente.remove();
+        }
+    }
+
+    function aplicarCapacidadePernoite() {
+        const inputPernoiteSim = document.querySelector('input[name="pernoite"][value="SIM"]');
+        const inputPernoiteNao = document.querySelector('input[name="pernoite"][value="NAO"]');
+
+        if (!inputPernoiteSim || !inputPernoiteNao) {
+            return;
+        }
+
+        if (capacidadePernoiteAtingida) {
+            inputPernoiteSim.disabled = true;
+            inputPernoiteSim.checked = false;
+            inputPernoiteNao.checked = true;
+
+            const labelSim = inputPernoiteSim.closest('label');
+            if (labelSim) labelSim.style.display = 'none';
+            atualizarMensagemPernoite();
+        } else {
+            inputPernoiteSim.disabled = false;
+            const labelSim = inputPernoiteSim.closest('label');
+            if (labelSim) labelSim.style.display = 'inline';
+            atualizarMensagemPernoite();
+        }
+    }
+
     // Verificar ao carregar a página
     window.addEventListener('DOMContentLoaded', () => {
         console.log('DOM Carregado - Formulário encontrado:', formulario ? 'SIM' : 'NÃO');
 
-        // Esconder pernoite por padrão
-        //if (divPernoite) divPernoite.style.display = 'none';
-        //const labelPernoite = encontrarLabelPernoite();
-        //if (labelPernoite) labelPernoite.style.display = 'none';
-
+        aplicarCapacidadePernoite();
         atualizarOpcoesParcelas();
         atualizarObrigatoriedadeComorbidade();
 
         // Adicionar event listeners para pernoite APÓS o DOM estar carregado
         const opcoesPernoite = document.querySelectorAll('input[name="pernoite"]');
         opcoesPernoite.forEach(input => {
-            input.addEventListener('change', atualizarOpcoesParcelas);
+            input.addEventListener('change', () => {
+                atualizarOpcoesParcelas();
+                aplicarCapacidadePernoite();
+            });
         });
 
         // Adicionar event listeners para comorbidade

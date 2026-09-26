@@ -41,6 +41,7 @@ def new_enrollment(request:HttpRequest):
         'Nilópolis',
         'Mesquita'
     ]
+    capacidade_pernoite_atingida = Inscricoes.objects.filter(pernoite='SIM').count() >= 300
 
     if request.method == "POST":
         form = InscricaoForm(request.POST)
@@ -54,6 +55,7 @@ def new_enrollment(request:HttpRequest):
             context = {
                 "form": form,
                 "distritos_sem_pernoite": distritos_sem_pernoite,
+                "capacidade_pernoite_atingida": capacidade_pernoite_atingida,
             }
             return render(request, 'enrollments/new_enrollment.html', context)
 
@@ -77,13 +79,15 @@ def new_enrollment(request:HttpRequest):
 
         context = {
             "form": form,
-            "distritos_sem_pernoite": distritos_sem_pernoite
+            "distritos_sem_pernoite": distritos_sem_pernoite,
+            "capacidade_pernoite_atingida": capacidade_pernoite_atingida,
         }
         return render(request, 'enrollments/new_enrollment.html', context)
 
     context = {
         "form": InscricaoForm(),
-        "distritos_sem_pernoite": distritos_sem_pernoite
+        "distritos_sem_pernoite": distritos_sem_pernoite,
+        "capacidade_pernoite_atingida": capacidade_pernoite_atingida,
     }
     return render(request, 'enrollments/new_enrollment.html', context)
 
