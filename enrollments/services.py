@@ -21,6 +21,17 @@ class Services:
         data = []
 
         for i in enrollments:
+            if i.pernoite == "SIM":
+                total_amount = 720
+            else:
+                total_amount = 630
+
+            def soma_parcelas_pagas(pagamento):
+                parcelas = Parcela.objects.filter(pagamento=pagamento)
+                return sum(parcela.valor for parcela in parcelas if parcela.status == 'PAGA')
+
+            total_paid = soma_parcelas_pagas(i.pagamento) if i.pagamento else 0
+
             data.append(
                 {
                     "ID": i.id,
@@ -37,6 +48,9 @@ class Services:
                     "Qual Comorbidade?": i.qual_comorbidade,
                     "Vai Dormir no Efraim?": i.pernoite,
                     "Sexo": i.sexo,
+                    "Valor Total": total_amount,
+                    "Valor Pago": total_paid,
+                    "Falta pagar": total_amount - total_paid,
                     "Data/Hora Criação": i.created_at.strftime('%d/%m/%Y %H:%M'),
                     "Data/Hora Atualização": i.updated_at.strftime('%d/%m/%Y %H:%M'),
                     "Consentimento Dados": i.consent_given,
