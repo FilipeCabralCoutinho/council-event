@@ -26,11 +26,15 @@ class Services:
             else:
                 total_amount = 630
 
+            def money(value):
+                return round(float(value), 2)
+
             def soma_parcelas_pagas(pagamento):
                 parcelas = Parcela.objects.filter(pagamento=pagamento)
                 return sum(parcela.valor for parcela in parcelas if parcela.status == 'PAGA')
 
-            total_paid = soma_parcelas_pagas(i.pagamento) if i.pagamento else 0
+            total_paid = money(soma_parcelas_pagas(i.pagamento)) if i.pagamento else 0.0
+            total_amount = money(total_amount)
 
             data.append(
                 {
@@ -50,7 +54,7 @@ class Services:
                     "Sexo": i.sexo,
                     "Valor Total": total_amount,
                     "Valor Pago": total_paid,
-                    "Falta pagar": total_amount - total_paid,
+                    "Falta pagar": money(total_amount - total_paid),
                     "Data/Hora Criação": i.created_at.strftime('%d/%m/%Y %H:%M'),
                     "Data/Hora Atualização": i.updated_at.strftime('%d/%m/%Y %H:%M'),
                     "Consentimento Dados": i.consent_given,
@@ -63,6 +67,15 @@ class Services:
         output = io.BytesIO()
         with pd.ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False, sheet_name='Inscritos')
+
+            worksheet = writer.sheets['Inscritos']
+            accounting_format = '[$R$-pt-BR] #,##0.00;[RED]-[$R$-pt-BR] #,##0.00'
+
+            for column in ["Valor Total", "Valor Pago", "Falta pagar"]:
+                if column in df.columns:
+                    column_index = df.columns.get_loc(column) + 1
+                    for row in range(2, len(df) + 2):
+                        worksheet.cell(row=row, column=column_index).number_format = accounting_format
 
         output.seek(0)
 
