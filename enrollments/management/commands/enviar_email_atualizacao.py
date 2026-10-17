@@ -18,7 +18,7 @@ class Command(BaseCommand):
         for enrollment in enrollments:
             if enrollment.email:
                 try:
-                    services.send_mail(enrollment, 'update_payment_email')
+                    services.send_email(enrollment, 'update_payment_email')
                     self.stdout.write(self.style.SUCCESS(f'E-mail enviado para {enrollment.email}'))
 
                     success += 1
