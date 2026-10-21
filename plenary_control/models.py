@@ -17,6 +17,7 @@ class Participante(models.Model):
     qual_comorbidade = models.CharField(max_length=255, blank=True)
     no_plenario = models.BooleanField(default=False)
     check_in = models.BooleanField(default=False)
+    sexo = models.CharField(max_length=10, blank=True)
 
     def __str__(self):
         return (

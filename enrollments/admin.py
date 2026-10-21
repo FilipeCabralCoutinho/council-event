@@ -9,7 +9,7 @@ from .logging import logger
 
 admin.site.register([Distrito, Igreja])
 
-@admin.action(description="Exportar Inscrições Selecionadas para Excel")
+@admin.action(description="Exportar Inscrições para Excel")
 def action_export_excel(modeladmin, request, queryset):
     logger.info(f"User {request.user} triggered the export of {queryset.count()} enrollments to Excel via Admin.")
     return Services.export_to_excel(queryset)
@@ -59,6 +59,20 @@ class IncricoesAdmin(admin.ModelAdmin):
         if 'delete_selected' in actions:
             del actions['delete_selected']
         return actions
+
+    def changelist_view(self, request, extra_context=None):
+            # Intercepta a submissão da action antes da validação de checkboxes do Django
+            if request.method == "POST" and request.POST.get("action") == "action_export_excel":
+                # 1. Obtém o ChangeList com os filtros/busca aplicados na tela
+                cl = self.get_changelist_instance(request)
+                
+                # 2. Pega o queryset filtrado (respeitando busca e list_filter ativos)
+                queryset = cl.get_queryset(request)
+                
+                # 3. Executa a exportação diretamente
+                return action_export_excel(self, request, queryset)
+
+            return super().changelist_view(request, extra_context=extra_context)
     
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
