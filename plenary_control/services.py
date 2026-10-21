@@ -3,16 +3,16 @@ from .models import Participante
 
 
 class PlenaryService:
-    def create_new_participants(self):
+    def create_all_participants(self):
         """
-        Creates new participant records for all confirmed enrollments.
+        Creates participant records based on all existing registrations.
         """
-        confirmed_participants = Inscricoes.objects.filter(
-            status_pagamento='CONFIRMADO'
-        )
+        enrollments = Inscricoes.objects.all()
 
-        for participant in confirmed_participants:
-            id_enrollment = participant.ids
+        for participant in enrollments:
+
+            # verifica se o participante já existe no banco de dados
+            id_enrollment = participant.id
             participant_exists = Participante.objects.filter(
                 id_inscricao=id_enrollment
             ).first()
@@ -34,17 +34,15 @@ class PlenaryService:
                 )
                 new_participant.save()
 
-            return True
+        return True
 
     def create_participant(self, enrollment_id):
         """
         Creates a new participant record based on the enrollment ID.
         """
+        # verifica se a inscrição existe e a guarda na variável
         enrollment = Inscricoes.objects.filter(id=enrollment_id).first()
         if not enrollment:
-            return None
-
-        if enrollment.status_pagamento != 'CONFIRMADO':
             return None
 
         new_participant = Participante(
