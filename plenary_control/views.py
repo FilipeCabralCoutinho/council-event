@@ -13,7 +13,7 @@ def dashboard(request):
 @require_http_methods(["GET"])
 def get_participantes(request):
     """Retorna lista de participantes em JSON com estatísticas"""
-    participantes = Participante.objects.all().values(
+    participantes = Participante.objects.all().order_by('id_participante').values(
         'id_participante',
         'id_inscricao',
         'nome',
@@ -45,13 +45,13 @@ def buscar_participantes(request):
     termo = request.GET.get('q', '').strip()
 
     if not termo:
-        participantes = Participante.objects.all()
+        participantes = Participante.objects.all().order_by('id_participante')
     else:
         from django.db.models import Q
         participantes = Participante.objects.filter(
             Q(nome__icontains=termo) |
             Q(id_participante__icontains=termo)
-        )
+        ).order_by('id_participante')
 
     data = participantes.values(
         'id_participante',

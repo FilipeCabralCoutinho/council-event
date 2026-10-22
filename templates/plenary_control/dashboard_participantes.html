@@ -134,7 +134,7 @@
                     <td>${p.distrito}</td>
                     <td>${p.igreja}</td>
                     <td>
-                        <select class="dropdown-select" data-id="${p.id_participante}" onchange="handleStatusChange(this)">
+                        <select class="dropdown-select ${p.no_plenario ? 'sim' : 'nao'}" data-id="${p.id_participante}" onchange="handleStatusChange(this)">
                             <option value="false" ${!p.no_plenario ? 'selected' : ''}>Não</option>
                             <option value="true" ${p.no_plenario ? 'selected' : ''}>Sim</option>
                         </select>
@@ -172,6 +172,7 @@
                 if (response.ok) {
                     const data = await response.json();
                     updateStats(data.stats);
+                    fetchParticipantes(searchInput.value);
                     showNotification('Participante atualizado com sucesso!', 'success');
                 } else {
                     showNotification('Erro ao atualizar participante', 'error');
