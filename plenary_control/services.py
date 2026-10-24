@@ -3,6 +3,9 @@ from .models import Participante
 import pandas as pd
 import io
 from django.http import HttpResponse
+from .logging import setup_logging
+
+logger = setup_logging()
 
 
 class PlenaryService:
@@ -10,6 +13,8 @@ class PlenaryService:
         """
         Creates participant records based on all existing registrations.
         """
+        logger.info("create_all_participants method initialized.")
+
         enrollments = Inscricoes.objects.all()
 
         for enrollment in enrollments:
@@ -38,6 +43,8 @@ class PlenaryService:
                 )
                 new_participant.save()
 
+        logger.info("create_all_participants method completed successfully!")
+
         return True
 
     def create_participant(self, enrollment_id):
@@ -45,6 +52,8 @@ class PlenaryService:
         Creates a new participant record based on the enrollment ID.
         """
         # verifica se a inscrição existe e a guarda na variável
+        logger.info("create_participant method initialized.")
+
         enrollment = Inscricoes.objects.filter(id=enrollment_id).first()
         if not enrollment:
             return None
@@ -67,17 +76,20 @@ class PlenaryService:
 
         new_participant.save()
 
+        logger.info("create_participant method completed successfully!")
+
         return new_participant
 
     def get_all_participants(self):
         """
         Retrieves all participant records.
         """
+        logger.info("get_all_participants method in process.")
         return Participante.objects.all()
 
     @staticmethod
     def export_participants_to_excel(self):
-        #logger.info("export_participants_to_excel method initialized.")
+        logger.info("export_participants_to_excel method initialized.")
 
         participants = Participante.objects.order_by("id_participante")
 
@@ -113,6 +125,6 @@ class PlenaryService:
         )
         response["Content-Disposition"] = 'attachment; filename="participantes_concilio.xlsx"'
 
-        #logger.info("Excel spreadsheet generated successfully!")
+        logger.info("Excel spreadsheet generated successfully!")
 
         return response
