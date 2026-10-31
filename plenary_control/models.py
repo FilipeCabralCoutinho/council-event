@@ -27,3 +27,9 @@ class Participante(models.Model):
             f"Igreja: {self.igreja} | "
             f"No Plenário: {self.no_plenario}"
         )
+
+
+class Plenario(Participante):
+    class Meta:
+        proxy = True
+        verbose_name_plural = "Controle do Plenário"

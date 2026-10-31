@@ -3,8 +3,10 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from .models import Participante
 import json
+from django.contrib.admin.views.decorators import staff_member_required
 
 
+@staff_member_required
 def dashboard(request):
     """Renderiza o dashboard de participantes"""
     return render(request, 'plenary_control/dashboard_participantes.html')
