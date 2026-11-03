@@ -1,0 +1,35 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+    <p>
+        Tem certeza de que deseja marcar
+        <strong>{{ queryset.count }} participante(s)</strong>
+        como fora do plenário?
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+
+        {% for obj in queryset %}
+            <input
+                type="hidden"
+                name="{{ action_checkbox_name }}"
+                value="{{ obj.pk }}"
+            >
+        {% endfor %}
+
+        <input type="hidden" name="action"
+               value="action_marcar_fora_plenario">
+
+        <input type="hidden" name="confirmar" value="1">
+
+        <button type="submit" class="default">
+            Sim, confirmar
+        </button>
+
+        <a href=".." class="button cancel-link">
+            Cancelar
+        </a>
+    </form>
+
+{% endblock %}
