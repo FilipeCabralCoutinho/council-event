@@ -80,6 +80,39 @@ class PlenaryService:
 
         return new_participant
 
+    def update_participant(self, enrollment_id):
+        """
+        Updates an existing participant record based on the enrollment ID.
+        """
+        logger.info("update_participant method initialized.")
+
+        enrollment = Inscricoes.objects.filter(id=enrollment_id).first()
+        if not enrollment:
+            return None
+
+        participant = Participante.objects.filter(id_inscricao=enrollment.id).first()
+        if not participant:
+            return None
+
+        participant.nome = enrollment.nome
+        participant.email = enrollment.email
+        participant.whatsapp = enrollment.whatsapp
+        participant.cpf = enrollment.cpf
+        participant.status_pagamento = enrollment.status_pagamento
+        participant.distrito = enrollment.distrito.nome
+        participant.igreja = enrollment.igreja.nome
+        participant.funcao = enrollment.funcao
+        participant.pernoite = enrollment.pernoite
+        participant.comorbidade = enrollment.possui_comorbidade
+        participant.qual_comorbidade = enrollment.qual_comorbidade
+        participant.sexo = enrollment.sexo
+
+        participant.save()
+
+        logger.info("update_participant method completed successfully!")
+
+        return participant
+
     def get_all_participants(self):
         """
         Retrieves all participant records.

@@ -46,7 +46,9 @@ def trigger_payment_email(sender, instance, created, **kwargs):
 @receiver(post_save, sender=Inscricoes)
 def create_participant_when_enrollment_created(sender, instance, created, **kwargs):
     """
-    Cria um participante quando a inscrição é criada.
+    Cria ou atualiza um participante quando uma inscrição é salva.
     """
     if created:
         plenary_service.create_participant(instance.id)
+    else:
+        plenary_service.update_participant(instance.id)
