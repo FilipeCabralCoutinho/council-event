@@ -1,5 +1,6 @@
 import pandas as pd
 from .models import Inscricoes, Pagamento, Parcela, EmailControl
+from plenary_control.models import Participante
 import io
 from django.http import HttpResponse
 from django.core.mail import EmailMultiAlternatives
@@ -95,6 +96,7 @@ class Services:
 
         try:
             enrollment = Inscricoes.objects.get(id=enrollment_id)
+            participant = Participante.objects.filter(id_inscricao=enrollment_id).first()
             now = timezone.localtime(timezone.now())
 
             logger.info(f"Sending ({email_type}) email for enrollment ID {enrollment.id}. Hour: {now}")
@@ -129,29 +131,29 @@ class Services:
             }
 
             config = email_config.get(email_type, email_config['new_enrollment'])
-            
+
             if email_type == 'update_payment_email':
                 pagamento = enrollment.pagamento
                 parcelas = Parcela.objects.filter(pagamento=pagamento)
 
                 html_content = render_to_string(config['template'], {
-                'enrollment': enrollment,
-                'parcelas': parcelas,
-                "text_head": config['text_head'],
-                "text_title": config['text_title'],
-                "start_text": config['start_text'],
-                "PIX_KEY": config.get('PIX_KEY'),
-                })
-            
-            else:
-                html_content = render_to_string(config['template'], {
                     'enrollment': enrollment,
+                    'parcelas': parcelas,
                     "text_head": config['text_head'],
                     "text_title": config['text_title'],
                     "start_text": config['start_text'],
                     "PIX_KEY": config.get('PIX_KEY'),
                 })
 
+            else:
+                html_content = render_to_string(config['template'], {
+                    'enrollment': enrollment,
+                    'participant': participant,
+                    "text_head": config['text_head'],
+                    "text_title": config['text_title'],
+                    "start_text": config['start_text'],
+                    "PIX_KEY": config.get('PIX_KEY'),
+                })
 
             email = EmailMultiAlternatives(
                 config['subject'],
