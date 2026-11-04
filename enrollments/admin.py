@@ -19,6 +19,7 @@ class IncricoesAdmin(admin.ModelAdmin):
     list_display = ('id', 'nome', 'sexo', 'cpf', 'status_pagamento', 'ver_pagamento', 'botao_enviar_email')
     search_fields = ('id', 'nome', 'cpf')
     list_filter = ('status_pagamento',)
+    list_editable = ('status_pagamento',)
     exclude = ('consent_given', 'ip_address', 'last_email')
     readonly_fields = ('id',)
     actions = [action_export_excel]
