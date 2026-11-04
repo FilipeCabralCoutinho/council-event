@@ -14,8 +14,8 @@ def text_fallback_new(enrollment):
         de Deus para todos nós. Para concluir o seu processo de participação,
         pedimos que envie os comprovantes de pagamento EXCLUSIVAMENTE para este
         mesmo e-mail. Sem o envio dos comprovantes, a Inscrição será CANCELADA.
-        Assim que o pagamento for confirmado no total, você receberá o seu
-        voucher de acesso ao Acampamento Efraim, que garantirá sua entrada
+        Assim que o pagamento for confirmado no total, você receberá o seu e-mail 
+        de acesso ao Acampamento Efraim, que garantirá sua entrada
         no evento.
         
         Ficamos felizes por ter você conosco nesse momento tão importante!
@@ -74,7 +74,7 @@ def start_text_new():
 
             <strong style="color: #e74c3c;">Para concluir o seu processo de participação, pedimos que envie os comprovantes de pagamento exclusivamente para o e-mail {email}. Sem o envio dos comprovantes a Inscrição será cancelada.</strong>
 
-            Assim que o pagamento for confirmado no total, você receberá o seu voucher de acesso ao Acampamento Efraim, que garantirá sua entrada no evento.
+            Assim que o pagamento for confirmado no total, você receberá o seu e-mail de acesso ao Acampamento Efraim, que garantirá sua entrada no evento.
 
             Ficamos felizes por ter você conosco nesse momento tão importante!
 
@@ -98,9 +98,7 @@ def text_fallback_payment_confirmation(enrollment):
         Seu pagamento foi confirmado com sucesso! Agradecemos muito por
         concluir este importante passo para sua participação no IX Concílio Regional.
 
-        Em breve, você receberá seu voucher de acesso ao Acampamento Efraim,
-        que garantirá sua entrada no evento. Mantenha este e-mail em local seguro
-        para referência futura.
+        Apresentar esse e-mail no acesso ao Acampamento Efraim para realizar o seu check-in.
 
         Ficamos felizes por ter você conosco nesse momento tão importante!
 
@@ -149,7 +147,7 @@ def start_text_payment_confirmation():
 
             Seu pagamento foi confirmado com sucesso! Agradecemos muito por concluir este importante passo para sua participação no IX Concílio Regional.
 
-            Em breve, você receberá seu voucher de acesso ao Acampamento Efraim, que garantirá sua entrada no evento.
+            Esse é seu e-mail de confirmação de acesso ao Acampamento Efraim, que garantirá sua entrada no evento.
 
             Ficamos felizes por ter você conosco nesse momento tão importante!
 
