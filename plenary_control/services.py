@@ -113,6 +113,22 @@ class PlenaryService:
 
         return participant
 
+    def delete_participant(self, enrollment_id):
+        """
+        Deletes a participant record based on the enrollment ID.
+        """
+        logger.info("delete_participant method initialized.")
+
+        participant = Participante.objects.filter(id_inscricao=enrollment_id).first()
+        if not participant:
+            return None
+
+        participant.delete()
+
+        logger.info("delete_participant method completed successfully!")
+
+        return True
+
     def get_all_participants(self):
         """
         Retrieves all participant records.

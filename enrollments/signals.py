@@ -1,4 +1,4 @@
-from django.db.models.signals import pre_save, post_save
+from django.db.models.signals import pre_save, post_save, post_delete
 from django.dispatch import receiver
 from .models import Inscricoes
 from .services import Services as EnrollmentService
@@ -52,3 +52,11 @@ def create_participant_when_enrollment_created(sender, instance, created, **kwar
         plenary_service.create_participant(instance.id)
     else:
         plenary_service.update_participant(instance.id)
+
+
+@receiver(post_delete, sender=Inscricoes)
+def delete_participant_when_enrollment_deleted(sender, instance, **kwargs):
+    """
+    Exclui o participante quando uma inscrição é excluída.
+    """
+    plenary_service.delete_participant(instance.id)
