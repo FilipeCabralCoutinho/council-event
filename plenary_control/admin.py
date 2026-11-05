@@ -2,7 +2,7 @@ from django.contrib import admin
 from plenary_control.models import Participante
 from plenary_control.services import PlenaryService
 from .logging import setup_logging
-from .models import Plenario
+from .models import Plenario, PainelPlenario
 from django.shortcuts import redirect
 from django.contrib import admin, messages
 from django.contrib.admin.helpers import ACTION_CHECKBOX_NAME
@@ -80,6 +80,22 @@ class PlenarioAdmin(admin.ModelAdmin):
     def changelist_view(self, request, extra_context=None):
         logger.info(f"User {request.user} accessed the Plenary Control Page in Admin.")
         return redirect('plenary_control:dashboard')
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_view_permission(self, request, obj=None):
+        return True
+
+    def has_module_permission(self, request):
+        return True
+
+
+@admin.register(PainelPlenario)
+class PainelPlenarioAdmin(admin.ModelAdmin):
+    def changelist_view(self, request, extra_context=None):
+        logger.info(f"User {request.user} accessed the Painel do Plenário Page in Admin.")
+        return redirect('plenary_control:painel')
 
     def has_add_permission(self, request):
         return False

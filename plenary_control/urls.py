@@ -5,6 +5,7 @@ app_name = 'plenary_control'
 
 urlpatterns = [
     path('', views.home, name='home'),
+    path('painel/', views.painel, name='painel'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('api/participantes/', views.get_participantes, name='api_participantes'),
     path('api/buscar/', views.buscar_participantes, name='api_buscar'),
