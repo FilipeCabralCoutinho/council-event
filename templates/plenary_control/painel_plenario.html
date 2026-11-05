@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plenário</title>
+    <link rel="stylesheet" href="{% static 'css/painel_plenario.css' %}">
+</head>
+<body>
+    <div class="panel">
+        <header class="panel-header">
+            <div class="brand">
+                <div class="logo">
+                    <img src="{% static 'logo.png' %}" alt="Logo Plenário">
+                </div>
+                <h1>Plenário</h1>
+            </div>
+        </header>
+
+        <main class="stats-grid">
+            <article class="stat-card total-card">
+                <span class="stat-label">Total</span>
+                <strong class="stat-value" id="total-stats">0</strong>
+            </article>
+            <article class="stat-card plenario-card">
+                <span class="stat-label">No Plenário</span>
+                <strong class="stat-value plenario" id="plenario-stats">0</strong>
+            </article>
+            <article class="stat-card fora-card">
+                <span class="stat-label">Fora do Plenário</span>
+                <strong class="stat-value fora" id="fora-stats">0</strong>
+            </article>
+            <article class="stat-card percent-card">
+                <span class="stat-label">Percentual no Plenário</span>
+                <strong class="stat-value percentage" id="percentual-stats">0%</strong>
+            </article>
+        </main>
+    </div>
+
+    <script>
+        async function fetchParticipantes() {
+            try {
+                const response = await fetch('/plenary_control/api/participantes/');
+                const data = await response.json();
+
+                if (data && data.stats) {
+                    updateStats(data.stats);
+                }
+            } catch (error) {
+                console.error('Erro ao buscar estatísticas:', error);
+            }
+        }
+
+        function updateStats(stats) {
+            document.getElementById('total-stats').textContent = stats.total ?? 0;
+            document.getElementById('plenario-stats').textContent = stats.no_plenario ?? 0;
+            document.getElementById('fora-stats').textContent = stats.fora_plenario ?? 0;
+            const percentual = Number(stats.percentual ?? 0);
+            document.getElementById('percentual-stats').textContent = `${percentual.toFixed(1)}%`;
+        }
+
+        fetchParticipantes();
+        setInterval(fetchParticipantes, 30000);
+    </script>
+</body>
+</html>

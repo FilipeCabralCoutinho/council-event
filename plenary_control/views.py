@@ -124,3 +124,7 @@ def atualizar_plenario(request):
 
 def home(request):
     return render(request, 'plenary_control/dashboard_participantes.html')
+
+@staff_member_required
+def painel(request):
+    return render(request, 'plenary_control/painel_plenario.html')

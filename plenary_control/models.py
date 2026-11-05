@@ -33,3 +33,9 @@ class Plenario(Participante):
     class Meta:
         proxy = True
         verbose_name_plural = "Controle do Plenário"
+
+
+class PainelPlenario(Participante):
+    class Meta:
+        proxy = True
+        verbose_name_plural = "Painel do Plenário"
