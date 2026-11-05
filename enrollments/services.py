@@ -1,4 +1,5 @@
 import pandas as pd
+from openpyxl.styles import PatternFill
 from .models import Inscricoes, Pagamento, Parcela, EmailControl
 from plenary_control.models import Participante
 import io
@@ -55,7 +56,7 @@ class Services:
                     "Sexo": i.sexo,
                     "Valor Total": total_amount,
                     "Valor Pago": total_paid,
-                    "Falta pagar": money(total_amount - total_paid),
+                    "Falta Pagar": money(total_amount - total_paid),
                     "Data/Hora Criação": i.created_at.strftime('%d/%m/%Y %H:%M'),
                     "Data/Hora Atualização": i.updated_at.strftime('%d/%m/%Y %H:%M'),
                     "Consentimento Dados": i.consent_given,
@@ -72,11 +73,35 @@ class Services:
             worksheet = writer.sheets['Inscritos']
             accounting_format = '[$R$-pt-BR] #,##0.00;[RED]-[$R$-pt-BR] #,##0.00'
 
-            for column in ["Valor Total", "Valor Pago", "Falta pagar"]:
+            total_column = "Valor Total"
+            due_column = "Falta Pagar"
+            for column in [total_column, "Valor Pago", due_column]:
                 if column in df.columns:
                     column_index = df.columns.get_loc(column) + 1
                     for row in range(2, len(df) + 2):
-                        worksheet.cell(row=row, column=column_index).number_format = accounting_format
+                        cell = worksheet.cell(row=row, column=column_index)
+                        cell.number_format = accounting_format
+
+                        if column == due_column:
+                            value = cell.value
+                            total_cell = worksheet.cell(row=row, column=df.columns.get_loc(total_column) + 1)
+                            total_value = total_cell.value
+
+                            if value is None:
+                                continue
+
+                            try:
+                                numeric_value = float(value)
+                                numeric_total = float(total_value)
+                            except (TypeError, ValueError):
+                                continue
+
+                            if numeric_value <= 0:
+                                cell.fill = PatternFill(fill_type="solid", fgColor="C6EFCE")
+                            elif abs(numeric_value - numeric_total) < 1e-9:
+                                cell.fill = PatternFill(fill_type="solid", fgColor="F4CCCC")
+                            elif 0 < numeric_value < numeric_total:
+                                cell.fill = PatternFill(fill_type="solid", fgColor="CFE2F3")
 
         output.seek(0)
 
