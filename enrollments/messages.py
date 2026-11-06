@@ -31,7 +31,6 @@ def text_fallback_new(enrollment):
         DADOS DA INSCRIÇÃO
         ==============================
 
-        NR INSCR: {enrollment.id}
         NOME: {enrollment.nome}
         DISTRITO: {enrollment.distrito}
         IGREJA: {enrollment.igreja}
@@ -113,7 +112,6 @@ def text_fallback_payment_confirmation(enrollment):
         DADOS DA INSCRIÇÃO
         ==============================
 
-        NR INSCR: {enrollment.id}
         NOME: {enrollment.nome}
         DISTRITO: {enrollment.distrito}
         IGREJA: {enrollment.igreja}
@@ -161,7 +159,6 @@ def start_text_payment_confirmation():
         )
 
 def text_fallback_update_payment(enrollment):
-    enrollment_id = enrollment.id
     pagamento = enrollment.pagamento
     parcelas = Parcela.objects.filter(pagamento=pagamento)
     text_parcelas = ""
@@ -176,7 +173,6 @@ def text_fallback_update_payment(enrollment):
 
         Houve uma atualização no seu pagamento. As informações atuais são:
 
-        NR INSCR: {enrollment.id}
         NOME: {enrollment.nome}
         Parcelas: {enrollment.quantidade_parcelas}
         {text_parcelas}
