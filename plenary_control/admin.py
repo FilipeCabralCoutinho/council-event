@@ -9,12 +9,13 @@ from django.contrib.admin.helpers import ACTION_CHECKBOX_NAME
 from django.template.response import TemplateResponse
 
 logger = setup_logging()
+service = PlenaryService()
 
 
 @admin.action(description="Exportar Participantes para Excel")
 def action_export_excel(modeladmin, request, queryset):
     logger.info(f"User {request.user} triggered the export of {queryset.count()} participants to Excel via Admin.")
-    return PlenaryService.export_participants_to_excel(queryset)    
+    return service.export_participants_to_excel()
 
 
 @admin.action(description="Marcar como fora do plenário")
@@ -37,6 +38,7 @@ def action_marcar_fora_plenario(modeladmin, request, queryset):
         )
 
     # Segunda execução: usuário confirmou
+    service.save_backup_excel()
     quantidade = queryset.update(no_plenario=False)
 
     modeladmin.message_user(
